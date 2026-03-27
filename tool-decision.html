@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Matrix · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+@media print {
+  nav,.no-print{display:none!important;}
+  body{background:white;padding:20px;}
+  .hero{padding:20px 0 10px;border:none;background:white;}
+  .card{box-shadow:none;border:1px solid #ddd;}
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#f9f6f1;--cream2:#ffffff;--ink:#0f1923;--ink-soft:rgba(15,25,35,0.65);
+  --blue-dark:#1b3a5c;--blue-mid:#2e6e9e;--blue-light:#d6e8f5;
+  --gold:#c8a45a;--jump-orange:#e84a0c;--border:rgba(15,25,35,0.1);
+  --yes:#2d6a4f;--no:#c1121f;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+.hero{padding:120px 60px 50px;background:linear-gradient(135deg,#f9f6f1 0%,#eef4fb 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(46,110,158,0.07) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--blue-mid);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--blue-mid);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:520px;line-height:1.75;}
+
+.container{max-width:1100px;margin:0 auto;padding:48px 60px 100px;}
+
+/* INSTRUCTIONS */
+.instructions{background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--blue-mid);padding:20px 24px;margin-bottom:32px;border-radius:2px;font-size:13px;color:var(--ink-soft);line-height:1.75;}
+.instructions strong{color:var(--ink);}
+
+/* CARD */
+.card{background:var(--cream2);border:1px solid var(--border);padding:28px 32px;margin-bottom:24px;border-radius:2px;}
+.section-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:"";width:14px;height:1.5px;background:var(--blue-mid);}
+
+/* OPTIONS */
+.options-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:4px;}
+.input-group label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px;font-weight:500;}
+input[type="text"],textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:2px;font-size:13px;font-weight:300;font-family:"Outfit",sans-serif;color:var(--ink);background:var(--cream);outline:none;transition:border-color 0.2s;}
+input[type="text"]:focus,textarea:focus{border-color:var(--blue-mid);}
+input[type="text"]::placeholder,textarea::placeholder{color:rgba(15,25,35,0.3);}
+textarea{min-height:90px;resize:vertical;}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-bottom:4px;}
+th{background:var(--cream);padding:9px 10px;text-align:left;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border);color:var(--ink-soft);}
+th.center{text-align:center;width:72px;}
+td{padding:7px 8px;border:1px solid var(--border);font-size:12px;font-weight:300;}
+td.center{text-align:center;}
+td input[type="text"]{border:none;background:transparent;font-size:12px;padding:0;font-family:"Outfit",sans-serif;color:var(--ink);}
+td input[type="text"]:focus{outline:none;}
+
+select{width:56px;padding:4px 6px;border:1.5px solid var(--border);border-radius:2px;font-size:12px;background:var(--cream);cursor:pointer;font-family:"Outfit",sans-serif;outline:none;transition:all 0.2s;}
+select:focus{border-color:var(--blue-mid);}
+select.filled{background:var(--blue-dark);color:var(--cream);border-color:var(--blue-dark);}
+select.check-yes{background:var(--yes);color:white;border-color:var(--yes);}
+select.check-no{background:var(--no);color:white;border-color:var(--no);}
+
+.total-row{background:var(--cream);font-weight:400;}
+.total-row td{font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.summary-row{background:var(--blue-dark);color:var(--cream);}
+.summary-row td{padding:11px 10px;font-size:13px;font-weight:500;}
+.avg-score{color:var(--blue-mid);font-weight:500;}
+.check-icon{font-size:16px;}
+.check-yes-icon{color:var(--yes);}
+.check-no-icon{color:var(--no);}
+
+/* WINNER */
+.winner{background:var(--blue-dark);color:var(--cream);padding:36px 40px;text-align:center;border-radius:2px;margin-bottom:24px;}
+.winner-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:500;}
+.winner-name{font-family:"Cormorant Garamond",serif;font-size:2.8rem;font-weight:300;color:var(--cream);letter-spacing:1px;}
+
+/* DECISION */
+.decision-input{text-align:center;font-size:18px;font-family:"Cormorant Garamond",serif;font-weight:300;}
+
+/* BUTTON */
+.btn{padding:14px 36px;background:var(--blue-dark);color:var(--cream);border:none;border-radius:2px;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;font-family:"Outfit",sans-serif;transition:all 0.2s;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-1px);}
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:8px;}
+
+.footer-note{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:rgba(15,25,35,0.35);letter-spacing:1px;}
+
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 40px;}
+  .container{padding:32px 24px 80px;}
+  .options-grid{grid-template-columns:1fr;}
+  .grid-2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow"><div class="eyebrow-line"></div><span>JUMP · Decision tool</span></div>
+  <h1 class="hero-title"><em>Decision</em> Matrix</h1>
+  <p class="hero-sub">Facing a complex decision? Rate up to three options across values, practical factors and a reality check — and see clearly which fits best.</p>
+</div>
+
+<div class="container">
+
+  <div class="instructions no-print">
+    <strong>How to use:</strong> Fill in your three options, then rate each one across the three sections. The matrix calculates a total score and highlights the strongest option — but the final decision is always yours.
+  </div>
+
+  <!-- OPTIONS -->
+  <div class="card">
+    <div class="section-title">Your options</div>
+    <div class="options-grid">
+      <div class="input-group">
+        <label>Option 1</label>
+        <input type="text" id="opt0" placeholder="e.g. Go freelance" onchange="updateAll()">
+      </div>
+      <div class="input-group">
+        <label>Option 2</label>
+        <input type="text" id="opt1" placeholder="e.g. Join a startup" onchange="updateAll()">
+      </div>
+      <div class="input-group">
+        <label>Option 3</label>
+        <input type="text" id="opt2" placeholder="e.g. Stay in current role" onchange="updateAll()">
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid-2">
+
+    <!-- LEFT -->
+    <div>
+      <div class="card">
+        <div class="section-title">1. Values alignment (1–5)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th class="center">Opt 1</th>
+              <th class="center">Opt 2</th>
+              <th class="center">Opt 3</th>
+            </tr>
+          </thead>
+          <tbody id="valuesTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">2. Practical factors (1–5)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th class="center">Opt 1</th>
+              <th class="center">Opt 2</th>
+              <th class="center">Opt 3</th>
+            </tr>
+          </thead>
+          <tbody id="practicalTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <div class="card">
+        <div class="section-title">3. Reality check (✓ / ✗)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterion</th>
+              <th class="center">Opt 1</th>
+              <th class="center">Opt 2</th>
+              <th class="center">Opt 3</th>
+            </tr>
+          </thead>
+          <tbody id="realityTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Summary</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="center">Opt 1</th>
+              <th class="center">Opt 2</th>
+              <th class="center">Opt 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Avg. Values</td>
+              <td class="center avg-score" id="sumVal0">–</td>
+              <td class="center avg-score" id="sumVal1">–</td>
+              <td class="center avg-score" id="sumVal2">–</td>
+            </tr>
+            <tr>
+              <td>Avg. Practical</td>
+              <td class="center avg-score" id="sumPrac0">–</td>
+              <td class="center avg-score" id="sumPrac1">–</td>
+              <td class="center avg-score" id="sumPrac2">–</td>
+            </tr>
+            <tr>
+              <td>Reality Check</td>
+              <td class="center check-icon" id="sumCheck0">–</td>
+              <td class="center check-icon" id="sumCheck1">–</td>
+              <td class="center check-icon" id="sumCheck2">–</td>
+            </tr>
+            <tr class="summary-row">
+              <td><strong>Total Score</strong></td>
+              <td class="center" id="sumTotal0">–</td>
+              <td class="center" id="sumTotal1">–</td>
+              <td class="center" id="sumTotal2">–</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="card">
+    <div class="section-title">Insights &amp; reflections</div>
+    <textarea id="insights" placeholder="What surprises you? Which option feels most aligned — and does that match the score?"></textarea>
+  </div>
+
+  <!-- WINNER -->
+  <div id="winnerBox" class="winner" style="display:none;">
+    <div class="winner-label">Strongest option · based on score &amp; reality check</div>
+    <div class="winner-name" id="winnerName"></div>
+  </div>
+
+  <!-- MY DECISION -->
+  <div class="card">
+    <div class="section-title">My decision</div>
+    <input type="text" class="decision-input" id="decision" placeholder="I have decided to...">
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="btn-row no-print">
+    <button class="btn" onclick="window.print()">Save as PDF</button>
+  </div>
+
+  <div class="footer-note">JUMP Coaching Method · teamworx.dk</div>
+
+</div>
+
+<script>
+const valueRows    = ['','','','',''];
+const practicalRows = ['Financial impact','Risk (5 = low risk)','Work-Life Balance','Development & learning','Enjoyment factor',''];
+const realityRows  = ['Financially feasible?','Family on board?','Timing right?','Reversible if needed?',''];
+
+function ratingSelect(id, onChange) {
+  return `<select id="${id}" onchange="${onChange}(this)"><option value="">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>`;
+}
+function checkSelect(id) {
+  return `<select id="${id}" onchange="updateCheck(this)"><option value="">–</option><option>✓</option><option>✗</option></select>`;
+}
+
+function initTables() {
+  // Values
+  let html = '';
+  valueRows.forEach((v,i) => {
+    html += `<tr>
+      <td><input type="text" id="val${i}" placeholder="Value ${i+1}" onchange="updateAll()"></td>
+      <td class="center">${ratingSelect(`valRate${i}-0`,'updateRating')}</td>
+      <td class="center">${ratingSelect(`valRate${i}-1`,'updateRating')}</td>
+      <td class="center">${ratingSelect(`valRate${i}-2`,'updateRating')}</td>
+    </tr>`;
+  });
+  html += `<tr class="total-row"><td><strong>Avg. Values</strong></td>
+    <td class="center avg-score" id="avgVal0">–</td>
+    <td class="center avg-score" id="avgVal1">–</td>
+    <td class="center avg-score" id="avgVal2">–</td></tr>`;
+  document.getElementById('valuesTable').innerHTML = html;
+
+  // Practical
+  html = '';
+  practicalRows.forEach((p,i) => {
+    html += `<tr>
+      <td><input type="text" id="prac${i}" value="${p}" placeholder="Factor ${i+1}" onchange="updateAll()"></td>
+      <td class="center">${ratingSelect(`pracRate${i}-0`,'updateRating')}</td>
+      <td class="center">${ratingSelect(`pracRate${i}-1`,'updateRating')}</td>
+      <td class="center">${ratingSelect(`pracRate${i}-2`,'updateRating')}</td>
+    </tr>`;
+  });
+  html += `<tr class="total-row"><td><strong>Avg. Practical</strong></td>
+    <td class="center avg-score" id="avgPrac0">–</td>
+    <td class="center avg-score" id="avgPrac1">–</td>
+    <td class="center avg-score" id="avgPrac2">–</td></tr>`;
+  document.getElementById('practicalTable').innerHTML = html;
+
+  // Reality
+  html = '';
+  realityRows.forEach((r,i) => {
+    html += `<tr>
+      <td><input type="text" id="real${i}" value="${r}" placeholder="Criterion ${i+1}" onchange="updateAll()"></td>
+      <td class="center">${checkSelect(`realRate${i}-0`)}</td>
+      <td class="center">${checkSelect(`realRate${i}-1`)}</td>
+      <td class="center">${checkSelect(`realRate${i}-2`)}</td>
+    </tr>`;
+  });
+  document.getElementById('realityTable').innerHTML = html;
+}
+
+function updateRating(sel) {
+  sel.classList.toggle('filled', !!sel.value);
+  updateAll();
+}
+
+function updateCheck(sel) {
+  sel.classList.remove('check-yes','check-no');
+  if(sel.value==='✓') sel.classList.add('check-yes');
+  else if(sel.value==='✗') sel.classList.add('check-no');
+  updateAll();
+}
+
+function calcAvg(prefix, count, optIdx) {
+  let sum=0, n=0;
+  for(let i=0;i<count;i++){
+    const el=document.getElementById(`${prefix}${i}-${optIdx}`);
+    if(el&&el.value){sum+=parseInt(el.value);n++;}
+  }
+  return n>0?(sum/n).toFixed(1):null;
+}
+
+function getRealityStatus(optIdx) {
+  for(let i=0;i<realityRows.length;i++){
+    const el=document.getElementById(`realRate${i}-${optIdx}`);
+    if(el&&el.value==='✗') return '✗';
+  }
+  return '✓';
+}
+
+function updateAll() {
+  for(let i=0;i<3;i++){
+    const va=calcAvg('valRate',valueRows.length,i);
+    const pa=calcAvg('pracRate',practicalRows.length,i);
+    const rc=getRealityStatus(i);
+
+    document.getElementById(`avgVal${i}`).textContent=va||'–';
+    document.getElementById(`sumVal${i}`).textContent=va||'–';
+    document.getElementById(`avgPrac${i}`).textContent=pa||'–';
+    document.getElementById(`sumPrac${i}`).textContent=pa||'–';
+
+    const checkEl=document.getElementById(`sumCheck${i}`);
+    checkEl.textContent=rc;
+    checkEl.className='center check-icon '+(rc==='✓'?'check-yes-icon':'check-no-icon');
+
+    let total='–';
+    if(va&&pa) total=((parseFloat(va)+parseFloat(pa))/2).toFixed(1);
+    document.getElementById(`sumTotal${i}`).textContent=total;
+  }
+
+  // Winner
+  let best=-1, bestIdx=-1;
+  for(let i=0;i<3;i++){
+    const opt=document.getElementById(`opt${i}`).value.trim();
+    if(!opt) continue;
+    const t=document.getElementById(`sumTotal${i}`).textContent;
+    const rc=getRealityStatus(i);
+    if(t!=='–'&&rc==='✓'){
+      const s=parseFloat(t);
+      if(s>best){best=s;bestIdx=i;}
+    }
+  }
+  const box=document.getElementById('winnerBox');
+  if(bestIdx>=0){
+    document.getElementById('winnerName').textContent=document.getElementById(`opt${bestIdx}`).value;
+    box.style.display='block';
+  } else {
+    box.style.display='none';
+  }
+}
+
+initTables();
+</script>
+</body>
+</html>

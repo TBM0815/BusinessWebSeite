@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burnout Risk Check · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --cream: #f9f6f1;
+  --cream2: #ffffff;
+  --ink: #0f1923;
+  --ink-soft: rgba(15,25,35,0.65);
+  --blue-dark: #1b3a5c;
+  --blue-mid: #2e6e9e;
+  --blue-light: #d6e8f5;
+  --gold: #c8a45a;
+  --jump-orange: #e84a0c;
+  --border: rgba(15,25,35,0.1);
+  --risk-low: #2d6a4f;
+  --risk-medium: #e07b00;
+  --risk-high: #c1121f;
+  --risk-critical: #7b0011;
+}
+
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:0.5px;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#fff5f0 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(193,18,31,0.05) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--risk-high);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--risk-high);font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--risk-high);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:520px;line-height:1.75;}
+
+.main{max-width:860px;margin:0 auto;padding:60px 60px 100px;}
+
+/* WARNING BOX */
+.warning-box{background:#fff8e6;border:1px solid #f0c040;border-left:3px solid var(--risk-medium);padding:24px 28px;border-radius:2px;margin-bottom:40px;}
+.warning-box h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--risk-medium);font-weight:600;margin-bottom:12px;}
+.warning-box p{font-size:13px;color:#7a5500;line-height:1.75;margin-bottom:8px;}
+.warning-box p:last-child{margin-bottom:0;}
+
+.emergency-box{background:#fff0f0;border:1px solid #f5c0c0;border-left:3px solid var(--risk-high);padding:20px 24px;border-radius:2px;margin-top:16px;}
+.emergency-box strong{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--risk-high);}
+.emergency-box p{font-size:13px;color:#8b0000;margin-top:8px;line-height:1.7;}
+
+/* DISCLAIMER */
+.disclaimer{font-size:12px;color:var(--ink-soft);font-style:italic;padding:16px 20px;background:var(--cream2);border-left:2px solid var(--border);margin-bottom:40px;line-height:1.7;}
+
+/* SECTION HEADER */
+.section-label{display:flex;align-items:center;gap:12px;margin:44px 0 28px;}
+.section-label-line{width:20px;height:1.5px;background:var(--blue-mid);}
+.section-label span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+
+/* QUESTION */
+.question{margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.question:last-of-type{border-bottom:none;}
+.question-text{font-size:15px;color:var(--ink);margin-bottom:16px;font-weight:300;line-height:1.5;}
+
+/* OPTIONS */
+.options{display:flex;gap:8px;flex-wrap:wrap;}
+.option{flex:1;min-width:80px;}
+.option input[type="radio"]{display:none;}
+.option label{display:block;padding:11px 10px;background:var(--cream2);border:1.5px solid var(--border);border-radius:2px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:12px;color:var(--ink-soft);font-weight:400;}
+.option label:hover{border-color:var(--blue-mid);color:var(--blue-dark);}
+.option input[type="radio"]:checked + label{background:var(--blue-dark);color:var(--cream);border-color:var(--blue-dark);}
+
+/* PROGRESS */
+.progress-bar{height:2px;background:var(--border);margin-bottom:40px;border-radius:1px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--blue-mid);width:0%;transition:width 0.3s ease;border-radius:1px;}
+.progress-text{font-size:11px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;}
+
+/* BUTTON */
+.btn{background:var(--blue-dark);color:var(--cream);border:none;padding:16px 48px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:600;font-family:"Outfit",sans-serif;transition:all 0.2s;display:block;margin:40px auto 0;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn:disabled{background:rgba(15,25,35,0.15);cursor:not-allowed;transform:none;}
+.btn-secondary{background:transparent;color:var(--blue-dark);border:1.5px solid var(--blue-dark);margin-top:16px;}
+.btn-secondary:hover{background:var(--blue-dark);color:var(--cream);}
+
+/* RESULTS */
+#results{display:none;}
+
+.score-card{padding:52px 40px;border-radius:4px;text-align:center;margin-bottom:36px;}
+.score-card.risk-low{background:#f0f7f4;border:1px solid rgba(45,106,79,0.2);}
+.score-card.risk-medium{background:#fff8e6;border:1px solid rgba(224,123,0,0.2);}
+.score-card.risk-high{background:#fff0f0;border:1px solid rgba(193,18,31,0.2);}
+.score-card.risk-critical{background:#1b0004;border:1px solid rgba(123,0,17,0.5);}
+
+.total-score{font-family:"Cormorant Garamond",serif;font-size:6rem;font-weight:300;line-height:1;margin-bottom:4px;}
+.score-card.risk-low .total-score{color:var(--risk-low);}
+.score-card.risk-medium .total-score{color:var(--risk-medium);}
+.score-card.risk-high .total-score{color:var(--risk-high);}
+.score-card.risk-critical .total-score{color:#ff6b6b;}
+
+.score-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px;}
+.score-card.risk-critical .score-label{color:rgba(255,255,255,0.5);}
+
+.risk-level{font-size:1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.score-card.risk-low .risk-level{color:var(--risk-low);}
+.score-card.risk-medium .risk-level{color:var(--risk-medium);}
+.score-card.risk-high .risk-level{color:var(--risk-high);}
+.score-card.risk-critical .risk-level{color:#ff6b6b;}
+
+.interpretation{font-size:1rem;font-weight:300;line-height:1.7;max-width:520px;margin:0 auto;}
+.score-card.risk-critical .interpretation{color:rgba(255,255,255,0.8);}
+
+/* BREAKDOWN */
+.breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
+.breakdown-item{background:var(--cream2);border:1px solid var(--border);border-top:3px solid var(--blue-mid);padding:24px 20px;border-radius:2px;}
+.breakdown-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-mid);margin-bottom:12px;font-weight:500;}
+.breakdown-score{font-family:"Cormorant Garamond",serif;font-size:2.5rem;font-weight:300;color:var(--blue-dark);line-height:1;margin-bottom:4px;}
+.breakdown-max{font-size:11px;color:var(--ink-soft);}
+
+/* RECOMMENDATIONS */
+.recommendations{background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--blue-mid);padding:36px 40px;border-radius:2px;margin-bottom:36px;}
+.recommendations h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);margin-bottom:20px;font-weight:600;}
+.recommendations p{font-size:14px;line-height:1.8;color:var(--ink-soft);margin-bottom:12px;}
+.recommendations ul{list-style:none;padding:0;}
+.recommendations li{font-size:14px;line-height:1.8;color:var(--ink-soft);margin-bottom:8px;padding-left:18px;position:relative;}
+.recommendations li::before{content:"·";position:absolute;left:0;color:var(--blue-mid);font-weight:700;}
+
+.resources-box{background:var(--cream);border:1px solid var(--border);padding:24px 28px;border-radius:2px;margin-top:24px;}
+.resources-box h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);margin-bottom:14px;font-weight:600;}
+.resources-box p{font-size:13px;color:var(--ink-soft);margin-bottom:8px;line-height:1.6;}
+.resources-box a{color:var(--blue-mid);text-decoration:none;border-bottom:1px solid rgba(46,110,158,0.3);}
+.resources-box a:hover{border-color:var(--blue-mid);}
+
+.cta-note{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:16px;padding:20px;}
+.cta-note a{color:var(--blue-mid);text-decoration:none;border-bottom:1px solid rgba(46,110,158,0.3);}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 50px;}
+  .main{padding:40px 24px 80px;}
+  .breakdown{grid-template-columns:1fr;}
+  .options{flex-direction:column;}
+  .option{min-width:100%;}
+  .score-card{padding:36px 24px;}
+  .total-score{font-size:4rem;}
+  .recommendations{padding:24px 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span>JUMP · Risk assessment</span>
+  </div>
+  <h1 class="hero-title"><em>Burnout</em> Risk Check</h1>
+  <p class="hero-sub">19 questions based on the Copenhagen Burnout Inventory. Answer honestly — this tool gives you information, not a diagnosis. Takes about 5–7 minutes.</p>
+</div>
+
+<div class="main">
+
+  <div class="warning-box">
+    <h3>Important note</h3>
+    <p>This tool is for self-reflection only and is <strong>not a medical diagnosis</strong>. Burnout is a serious condition that requires professional support.</p>
+    <div class="emergency-box">
+      <strong>Seek professional help immediately if you experience:</strong>
+      <p>· Suicidal thoughts or self-harm &nbsp;· Panic attacks or severe anxiety<br>
+      · Severe depression or hopelessness &nbsp;· Inability to manage daily life<br><br>
+      <strong>Crisis line (Denmark, 24/7):</strong> Livslinjen · <a href="tel:70201201" style="color:#8b0000;">70 20 12 01</a><br>
+      <strong>International:</strong> <a href="https://www.befrienders.org" target="_blank" style="color:#8b0000;">befrienders.org</a></p>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Based on: Copenhagen Burnout Inventory (Kristensen et al., 2005) — freely available for non-commercial use. Source: National Research Centre for the Working Environment, Denmark.
+  </div>
+
+  <div id="questionnaire">
+
+    <div class="progress-text" id="progressText">0 of 19 questions answered</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <!-- SECTION 1 -->
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Personal exhaustion · Questions 1–6</span>
+    </div>
+
+    <div class="question">
+      <div class="question-text">How often do you feel tired?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q1" id="q1-0" value="0"><label for="q1-0">Never</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-1" value="1"><label for="q1-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-2" value="2"><label for="q1-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-3" value="3"><label for="q1-3">Often</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-4" value="4"><label for="q1-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">How often do you feel physically exhausted?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q2" id="q2-0" value="0"><label for="q2-0">Never</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-1" value="1"><label for="q2-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-2" value="2"><label for="q2-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-3" value="3"><label for="q2-3">Often</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-4" value="4"><label for="q2-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">How often do you feel emotionally exhausted?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q3" id="q3-0" value="0"><label for="q3-0">Never</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-1" value="1"><label for="q3-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-2" value="2"><label for="q3-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-3" value="3"><label for="q3-3">Often</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-4" value="4"><label for="q3-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">How often do you think "I can't take it anymore"?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q4" id="q4-0" value="0"><label for="q4-0">Never</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-1" value="1"><label for="q4-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-2" value="2"><label for="q4-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-3" value="3"><label for="q4-3">Often</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-4" value="4"><label for="q4-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">How often do you feel worn out?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q5" id="q5-0" value="0"><label for="q5-0">Never</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-1" value="1"><label for="q5-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-2" value="2"><label for="q5-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-3" value="3"><label for="q5-3">Often</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-4" value="4"><label for="q5-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel weak and susceptible to illness?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q6" id="q6-0" value="0"><label for="q6-0">Never</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-1" value="1"><label for="q6-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-2" value="2"><label for="q6-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-3" value="3"><label for="q6-3">Often</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-4" value="4"><label for="q6-4">Always</label></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Work-related exhaustion · Questions 7–13</span>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Is your work emotionally demanding?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q7" id="q7-0" value="0"><label for="q7-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-1" value="1"><label for="q7-1">A little</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-2" value="2"><label for="q7-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-3" value="3"><label for="q7-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-4" value="4"><label for="q7-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel burnt out because of your work?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q8" id="q8-0" value="0"><label for="q8-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-1" value="1"><label for="q8-1">A little</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-2" value="2"><label for="q8-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-3" value="3"><label for="q8-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-4" value="4"><label for="q8-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Does your work frustrate you?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q9" id="q9-0" value="0"><label for="q9-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-1" value="1"><label for="q9-1">A little</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-2" value="2"><label for="q9-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-3" value="3"><label for="q9-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-4" value="4"><label for="q9-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel exhausted at the end of a working day?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q10" id="q10-0" value="0"><label for="q10-0">Never</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-1" value="1"><label for="q10-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-2" value="2"><label for="q10-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-3" value="3"><label for="q10-3">Often</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-4" value="4"><label for="q10-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel exhausted in the morning at the thought of another day at work?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q11" id="q11-0" value="0"><label for="q11-0">Never</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-1" value="1"><label for="q11-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-2" value="2"><label for="q11-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-3" value="3"><label for="q11-3">Often</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-4" value="4"><label for="q11-4">Always</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel that every working hour is tiring for you?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q12" id="q12-0" value="0"><label for="q12-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-1" value="1"><label for="q12-1">A little</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-2" value="2"><label for="q12-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-3" value="3"><label for="q12-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-4" value="4"><label for="q12-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you have enough energy for family and friends during your leisure time?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q13" id="q13-0" value="4"><label for="q13-0">Never</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-1" value="3"><label for="q13-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-2" value="2"><label for="q13-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-3" value="1"><label for="q13-3">Often</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-4" value="0"><label for="q13-4">Always</label></div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Exhaustion from working with people · Questions 14–19</span>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you find it hard to work with the people you encounter daily?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q14" id="q14-0" value="0"><label for="q14-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-1" value="1"><label for="q14-1">A little</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-2" value="2"><label for="q14-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-3" value="3"><label for="q14-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-4" value="4"><label for="q14-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Does working with people drain you emotionally?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q15" id="q15-0" value="0"><label for="q15-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-1" value="1"><label for="q15-1">A little</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-2" value="2"><label for="q15-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-3" value="3"><label for="q15-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-4" value="4"><label for="q15-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Are there situations at work that affect you emotionally in a heavy way?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q16" id="q16-0" value="0"><label for="q16-0">Very rarely</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-1" value="1"><label for="q16-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-2" value="2"><label for="q16-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-3" value="3"><label for="q16-3">Often</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-4" value="4"><label for="q16-4">Very often</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel worn out by collaboration with others?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q17" id="q17-0" value="0"><label for="q17-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-1" value="1"><label for="q17-1">A little</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-2" value="2"><label for="q17-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-3" value="3"><label for="q17-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-4" value="4"><label for="q17-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Does working with people frustrate you?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q18" id="q18-0" value="0"><label for="q18-0">Very little</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-1" value="1"><label for="q18-1">A little</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-2" value="2"><label for="q18-2">Somewhat</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-3" value="3"><label for="q18-3">A lot</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-4" value="4"><label for="q18-4">Very much</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Do you feel that you give more than you get back in your interactions with others?</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q19" id="q19-0" value="0"><label for="q19-0">Never</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-1" value="1"><label for="q19-1">Rarely</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-2" value="2"><label for="q19-2">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-3" value="3"><label for="q19-3">Often</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-4" value="4"><label for="q19-4">Always</label></div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculateResults()" id="submitBtn" disabled>Show my results</button>
+
+  </div><!-- end questionnaire -->
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="score-card" id="scoreCard">
+      <div class="total-score" id="totalScore">0</div>
+      <div class="score-label">Total score · out of 76</div>
+      <div class="risk-level" id="riskLevel"></div>
+      <div class="interpretation" id="interpretation"></div>
+    </div>
+
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Breakdown by area</span>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-item">
+        <div class="breakdown-title">Personal exhaustion</div>
+        <div class="breakdown-score" id="personalScore">0</div>
+        <div class="breakdown-max">out of 24</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="breakdown-title">Work-related exhaustion</div>
+        <div class="breakdown-score" id="workScore">0</div>
+        <div class="breakdown-max">out of 28</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="breakdown-title">People-related exhaustion</div>
+        <div class="breakdown-score" id="peopleScore">0</div>
+        <div class="breakdown-max">out of 24</div>
+      </div>
+    </div>
+
+    <div class="recommendations" id="recommendations"></div>
+
+    <button class="btn" onclick="downloadCSV()">Download results as CSV</button>
+    <button class="btn btn-secondary" onclick="restart()">Start again</button>
+    <p class="cta-note">These results are a starting point. <a href="teamworx_website.html#contact">Book a free JUMP conversation</a> to explore what they mean for you.</p>
+
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 19;
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  }
+  document.getElementById('progressText').textContent = `${answered} of ${TOTAL} questions answered`;
+  document.getElementById('progressFill').style.width = `${(answered/TOTAL)*100}%`;
+  document.getElementById('submitBtn').disabled = answered < TOTAL;
+}
+
+document.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', updateProgress));
+
+function calculateResults() {
+  let personal = 0, work = 0, people = 0;
+  for (let i = 1; i <= 6; i++) personal += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  for (let i = 7; i <= 13; i++) work += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  for (let i = 14; i <= 19; i++) people += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  const total = personal + work + people;
+
+  document.getElementById('totalScore').textContent = total;
+  document.getElementById('personalScore').textContent = personal;
+  document.getElementById('workScore').textContent = work;
+  document.getElementById('peopleScore').textContent = people;
+
+  const card = document.getElementById('scoreCard');
+  let riskClass, riskLabel, interp, recs;
+
+  if (total <= 19) {
+    riskClass = 'risk-low';
+    riskLabel = 'Low burnout risk';
+    interp = 'Your results show no significant signs of burnout. You appear to be managing your work situation well. Keep maintaining the habits that support you.';
+    recs = `<h3>Recommendations</h3>
+      <p>Even at low risk, prevention matters:</p>
+      <ul>
+        <li>Keep monitoring your work-life balance</li>
+        <li>Maintain social connections and hobbies</li>
+        <li>Prioritise sleep and regular movement</li>
+        <li>Build moments of self-reflection into your routine</li>
+      </ul>`;
+  } else if (total <= 38) {
+    riskClass = 'risk-medium';
+    riskLabel = 'Medium burnout risk';
+    interp = 'Your results show early warning signs. You may be overloaded and it is worth paying careful attention to how you are managing your energy.';
+    recs = `<h3>Recommendations</h3>
+      <p>Now is the time to actively change course:</p>
+      <ul>
+        <li>Reduce sources of stress where possible</li>
+        <li>Set clear boundaries between work and personal life</li>
+        <li>Build conscious recovery time into your day</li>
+        <li>Talk to someone you trust about your workload</li>
+        <li>Consider professional support — coaching or counselling</li>
+      </ul>`;
+  } else if (total <= 57) {
+    riskClass = 'risk-high';
+    riskLabel = 'High burnout risk';
+    interp = 'Your results show clear signs of burnout. You are under significant strain and need to act. Please take these signals seriously.';
+    recs = `<h3>Recommendations</h3>
+      <p><strong>Action is needed. Your health is at risk.</strong></p>
+      <ul>
+        <li><strong>Seek professional support soon</strong> — doctor, therapist or psychologist</li>
+        <li>Talk to your employer about reducing your workload</li>
+        <li>Consider taking time off or sick leave</li>
+        <li>Activate your support network — family and friends</li>
+        <li>Drastically reduce professional commitments where possible</li>
+      </ul>
+      <div class="resources-box">
+        <h4>Support resources</h4>
+        <p><strong>Crisis line Denmark (24/7):</strong> Livslinjen · <a href="tel:70201201">70 20 12 01</a></p>
+        <p><strong>International:</strong> <a href="https://www.befrienders.org" target="_blank">befrienders.org</a></p>
+      </div>`;
+  } else {
+    riskClass = 'risk-critical';
+    riskLabel = 'Critical burnout risk';
+    interp = 'Your results indicate a very high level of burnout. You are in a serious situation. Please act today.';
+    recs = `<h3>Immediate action required</h3>
+      <p><strong>You are in a critical situation. Please do not wait.</strong></p>
+      <ul>
+        <li><strong>Contact your doctor today</strong></li>
+        <li>If you are having thoughts of suicide: call a crisis line immediately</li>
+        <li>Tell someone close to you how you are feeling</li>
+        <li>Step back from work — your health comes first</li>
+        <li>Avoid major decisions while in this state</li>
+      </ul>
+      <div class="resources-box">
+        <h4>Emergency contacts</h4>
+        <p><strong>Livslinjen Denmark (24/7):</strong> <a href="tel:70201201">70 20 12 01</a></p>
+        <p><strong>International crisis support:</strong> <a href="https://www.befrienders.org" target="_blank">befrienders.org</a></p>
+        <p><strong>Emergency services:</strong> 112</p>
+      </div>`;
+  }
+
+  card.className = `score-card ${riskClass}`;
+  document.getElementById('riskLevel').textContent = riskLabel;
+  document.getElementById('interpretation').textContent = interp;
+  document.getElementById('recommendations').innerHTML = recs;
+
+  document.getElementById('questionnaire').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+}
+
+function downloadCSV() {
+  const p = document.getElementById('personalScore').textContent;
+  const w = document.getElementById('workScore').textContent;
+  const pe = document.getElementById('peopleScore').textContent;
+  const t = document.getElementById('totalScore').textContent;
+  let csv = 'Area,Score,Maximum\n';
+  csv += `Personal exhaustion,${p},24\n`;
+  csv += `Work-related exhaustion,${w},28\n`;
+  csv += `People-related exhaustion,${pe},24\n`;
+  csv += `\nTotal score,${t},76\n`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'burnout-risk-check.csv'; a.click();
+}
+
+function restart() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  updateProgress();
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('questionnaire').style.display = 'block';
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+}
+</script>
+</body>
+</html>

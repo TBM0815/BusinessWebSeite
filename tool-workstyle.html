@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUMP Work Style Assessment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #FAF9F6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .header {
+            background: #8B7355;
+            color: #FAF9F6;
+            padding: 50px 40px;
+            text-align: center;
+            border-bottom: 1px solid #E8E6E1;
+        }
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        .content {
+            padding: 50px 40px;
+        }
+        .intro {
+            background: #F5F3EF;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 3px solid #8B7355;
+        }
+        .intro h2 {
+            color: #3C3C3C;
+            margin-bottom: 15px;
+            font-weight: 400;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .intro p {
+            color: #6B6B6B;
+            line-height: 1.7;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        .disclaimer {
+            background: #F5F3EF;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-left: 3px solid #A0826D;
+            font-size: 0.85em;
+            color: #6B6B6B;
+            font-style: italic;
+        }
+        .progress {
+            margin-bottom: 40px;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #E8E6E1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #8B7355;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            text-align: center;
+            color: #6B6B6B;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+        .question-card {
+            background: #F5F3EF;
+            padding: 35px;
+            margin-bottom: 30px;
+            border-left: 3px solid #8B7355;
+        }
+        .question-number {
+            color: #A0826D;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            color: #3C3C3C;
+            font-size: 1.15em;
+            font-weight: 400;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .scale-option {
+            flex: 1;
+            text-align: center;
+        }
+        .scale-option input[type="radio"] {
+            display: none;
+        }
+        .scale-option label {
+            display: block;
+            padding: 15px 10px;
+            background: #FFFFFF;
+            border: 1px solid #D4CFC7;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #6B6B6B;
+        }
+        .scale-option input[type="radio"]:checked + label {
+            background: #8B7355;
+            color: #FAF9F6;
+            border-color: #8B7355;
+        }
+        .scale-option label:hover {
+            background: #F5F3EF;
+            border-color: #8B7355;
+        }
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #6B6B6B;
+            margin-top: 10px;
+        }
+        .btn-nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 2px;
+            font-size: 0.95em;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .btn-primary {
+            background: #8B7355;
+            color: #FAF9F6;
+            border: 1px solid #8B7355;
+        }
+        .btn-primary:hover {
+            background: #6D5940;
+        }
+        .btn-secondary {
+            background: #FFFFFF;
+            color: #8B7355;
+            border: 1px solid #D4CFC7;
+        }
+        .btn-secondary:hover {
+            background: #F5F3EF;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .results-section {
+            margin-bottom: 40px;
+        }
+        .dimension-card {
+            background: #F5F3EF;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 3px solid #8B7355;
+        }
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .dimension-name {
+            font-size: 1.3em;
+            font-weight: 400;
+            color: #3C3C3C;
+            letter-spacing: 0.5px;
+        }
+        .dimension-score {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #8B7355;
+        }
+        .dimension-desc {
+            color: #6B6B6B;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        .chart-container {
+            background: white;
+            padding: 40px;
+            border-radius: 2px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .chart-container h3 {
+            color: #8B7355;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .ideal-work {
+            background: #F5F3EF;
+            padding: 35px;
+            border-left: 3px solid #8B7355;
+            margin-bottom: 40px;
+        }
+        .ideal-work h3 {
+            color: #3C3C3C;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .ideal-work ul {
+            list-style: none;
+            padding: 0;
+        }
+        .ideal-work li {
+            padding: 12px 0;
+            color: #6B6B6B;
+            line-height: 1.6;
+            border-bottom: 1px solid #E8E6E1;
+        }
+        .ideal-work li:last-child {
+            border-bottom: none;
+        }
+        .ideal-work li:before {
+            content: "→ ";
+            color: #8B7355;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="position:fixed;top:16px;left:20px;z-index:9999;">
+  <a href="tools.html" style="font-family:'Outfit',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#1b3a5c;background:rgba(249,246,241,0.95);border:1px solid rgba(15,25,35,0.12);padding:8px 16px;border-radius:2px;text-decoration:none;font-weight:500;">← Tools</a>
+</div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Work Style Assessment</h1>
+            <p>Find out how you work best</p>
+        </div>
+        
+        <div class="content">
+            <!-- Intro -->
+            <div class="step active" id="stepIntro">
+                <div class="intro">
+                    <h2>Instructions</h2>
+                    <p>Dieses Assessment hilft dir herauszufinden, welches Arbeitsumfeld und welche Aufgaben am besten zu dir passen.</p>
+                    <p style="margin-top: 15px;">Du beantwortest 40 Questionn zu deinen beruflichen Präferenzen. Es gibt keine richtigen oder falschen Antworten - sei einfach ehrlich mit dir selbst.</p>
+                    <p style="margin-top: 15px; font-weight: 500;">Dauer: ca. 10-15 minutes</p>
+                </div>
+                
+                <div class="disclaimer">
+                    Dieses Assessment basiert auf dem wissenschaftlich validierten Big Five Persönlichkeitsmodell, angepasst für den beruflichen Kontext.
+                </div>
+                
+                <div class="btn-nav">
+                    <button class="btn btn-primary" onclick="startAssessment()">Assessment starten</button>
+                </div>
+            </div>
+            
+            <!-- Questions -->
+            <div class="step" id="stepQuestions">
+                <div class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Question 0 of 40</div>
+                </div>
+                
+                <div class="question-card" id="questionCard"></div>
+                
+                <div class="btn-nav">
+                    <button class="btn btn-secondary" onclick="prevQuestion()" id="btnPrev" style="display: none;">← Back</button>
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="btnNext">Next →</button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="step" id="stepResults">
+                <div class="intro">
+                    <h2>Dein Arbeits-Stil Profil</h2>
+                    <p>Basierend auf deinen Antworten haben wir dein individuelles Profil erstellt.</p>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Deine 5 Dimensionen</h3>
+                    <canvas id="resultsChart"></canvas>
+                </div>
+                
+                <div class="results-section" id="dimensionsResults"></div>
+                
+                <div class="ideal-work" id="idealWork"></div>
+                
+                <div class="btn-nav">
+                    <button class="btn btn-primary" onclick="downloadExcel()">📊 Ergebnisse herunterladen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dimensions = [
+            {
+                name: "Innovationsfreude",
+                description: "Wie offen bist du für Neues, Kreativität und Veränderung?",
+                low: "Bevorzugst bewährte Methoden, schätzt Routine und Stabilität",
+                high: "Liebst neue Ideen, Experimente und unkonventionelle Ansätze"
+            },
+            {
+                name: "Strukturbedürfnis",
+                description: "Wie wichtig sind dir Ordnung, Planung und Zuverlässigkeit?",
+                low: "Arbeitest flexibel und spontan, passt dich schnell an",
+                high: "Brauchst klare Strukturen, Planung und organisierte Prozesse"
+            },
+            {
+                name: "Energie-Quelle",
+                description: "Wo tankst du Energie - bei Menschen oder in Ruhe?",
+                low: "Brauchst Ruhe und Alleinsein um Energie zu tanken",
+                high: "Gewinnst Energie aus Interaktion und Zusammenarbeit"
+            },
+            {
+                name: "Kollaborations-Stil",
+                description: "Wie wichtig sind dir Harmonie und Zusammenarbeit?",
+                low: "Direkt und ergebnisorientiert, auch wenn es Konflikte gibt",
+                high: "Schätzt Harmonie, Konsens und unterstützendes Miteinander"
+            },
+            {
+                name: "Stressresilienz",
+                description: "Wie gehst du mit Druck und Unsicherheit um?",
+                low: "Empfindlich für Stress, brauchst stabiles Umfeld",
+                high: "Gelassen unter Druck, emotional ausgeglichen"
+            }
+        ];
+
+        const questions = [
+            // Innovationsfreude (Openness)
+            { dim: 0, text: "Ich probiere gerne neue Arbeitsmethoden aus, auch wenn die alten funktionieren", reverse: false },
+            { dim: 0, text: "Ich bevorzuge bewährte Prozesse statt ständiger Experimente", reverse: true },
+            { dim: 0, text: "Kreative Lösungsfindung macht mir mehr Spaß als standardisierte Abläufe", reverse: false },
+            { dim: 0, text: "Ich fühle mich wohl mit Veränderungen und neuen Richtungen", reverse: false },
+            { dim: 0, text: "Mir ist wichtig, dass Dinge vorhersehbar und planbar bleiben", reverse: true },
+            { dim: 0, text: "Ich denke gerne über unkonventionelle Ansätze nach", reverse: false },
+            { dim: 0, text: "Routine gibt mir Sicherheit und Produktivität", reverse: true },
+            { dim: 0, text: "Ich langweile mich schnell, wenn Aufgaben zu repetitiv werden", reverse: false },
+            
+            // Strukturbedürfnis (Conscientiousness)
+            { dim: 1, text: "Ich arbeite am besten mit klaren To-Do-Listen und Zeitplänen", reverse: false },
+            { dim: 1, text: "Spontane Änderungen im Plan stressen mich nicht", reverse: true },
+            { dim: 1, text: "Ordnung am Arbeitsplatz ist mir sehr wichtig", reverse: false },
+            { dim: 1, text: "Ich plane lieber langfristig als kurzfristig zu improvisieren", reverse: false },
+            { dim: 1, text: "Ich kann gut in chaotischen Umgebungen arbeiten", reverse: true },
+            { dim: 1, text: "Deadlines einzuhalten hat für mich hohe Priorität", reverse: false },
+            { dim: 1, text: "Ich arbeite lieber flexibel als nach strengem Plan", reverse: true },
+            { dim: 1, text: "Details sind mir wichtiger als das große Ganze", reverse: false },
+            
+            // Energie-Quelle (Extraversion)
+            { dim: 2, text: "Nach intensiven Meetings fühle ich mich energiegeladen", reverse: false },
+            { dim: 2, text: "Ich brauche regelmäßig Zeit alleine um produktiv zu sein", reverse: true },
+            { dim: 2, text: "Brainstorming in Gruppen inspiriert mich", reverse: false },
+            { dim: 2, text: "Ich arbeite am besten in ruhiger Umgebung ohne viel Interaktion", reverse: true },
+            { dim: 2, text: "Smalltalk und Networking fallen mir leicht", reverse: false },
+            { dim: 2, text: "Teamarbeit gibt mir mehr Energie als Solo-Projekte", reverse: false },
+            { dim: 2, text: "Nach einem Tag voller Gespräche bin ich erschöpft", reverse: true },
+            { dim: 2, text: "Ich äußere meine Ideen gerne laut in Meetings", reverse: false },
+            
+            // Kollaborations-Stil (Agreeableness)
+            { dim: 3, text: "Harmonie im Team ist mir wichtiger als schnelle Ergebnisse", reverse: false },
+            { dim: 3, text: "Ich sage direkt meine Meinung, auch wenn es anderen nicht gefällt", reverse: true },
+            { dim: 3, text: "Ich vermeide Konfrontationen wenn möglich", reverse: false },
+            { dim: 3, text: "Ich helfe Kollegen auch wenn ich selbst viel zu tun habe", reverse: false },
+            { dim: 3, text: "Ergebnisse sind mir wichtiger als die Gefühle anderer", reverse: true },
+            { dim: 3, text: "Ich suche immer nach Kompromissen die für alle passen", reverse: false },
+            { dim: 3, text: "Ich kann gut 'No' sagen wenn nötig", reverse: true },
+            { dim: 3, text: "Empathie ist eine meiner Strengths im Beruf", reverse: false },
+            
+            // Stressresilienz (Neuroticism reversed)
+            { dim: 4, text: "Ich bleibe auch unter Zeitdruck gelassen", reverse: false },
+            { dim: 4, text: "Unsicherheit und Unklarheit stressen mich schnell", reverse: true },
+            { dim: 4, text: "Nach Fehlern erhole ich mich emotional schnell", reverse: false },
+            { dim: 4, text: "Ich mache mir oft Sorgen über mögliche Probleme", reverse: true },
+            { dim: 4, text: "Kritik nehme ich sachlich auf ohne persönlich verletzt zu sein", reverse: false },
+            { dim: 4, text: "Stressige Phasen beeinträchtigen meinen Schlaf", reverse: true },
+            { dim: 4, text: "Ich kann gut mit Mehrdeutigkeit umgehen", reverse: false },
+            { dim: 4, text: "Meine Stimmung ist meist ausgeglichen und stabil", reverse: false }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(40).fill(null);
+        let resultsChart;
+
+        function startAssessment() {
+            document.getElementById('stepIntro').classList.remove('active');
+            document.getElementById('stepQuestions').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            const card = document.getElementById('questionCard');
+            
+            card.innerHTML = `
+                <div class="question-number">Question ${currentQuestion + 1} of 40</div>
+                <div class="question-text">${q.text}</div>
+                <div class="scale">
+                    ${[1,2,3,4,5].map(v => `
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestion}" id="q${currentQuestion}_${v}" value="${v}" ${answers[currentQuestion] === v ? 'checked' : ''} onchange="setAnswer(${v})">
+                            <label for="q${currentQuestion}_${v}">${v}</label>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="scale-labels">
+                    <span>Strongly disagree</span>
+                    <span>Trifft vollständig zu</span>
+                </div>
+            `;
+            
+            updateProgress();
+            document.getElementById('btnPrev').style.display = currentQuestion > 0 ? 'inline-block' : 'none';
+            document.getElementById('btnNext').textContent = currentQuestion === 39 ? 'Auswertung →' : 'Next →';
+        }
+
+        function setAnswer(value) {
+            answers[currentQuestion] = value;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / 40) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of 40`;
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) {
+                alert('Bitte beantworte die Question bevor du weiter gehst.');
+                return;
+            }
+            
+            if (currentQuestion < 39) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('stepQuestions').classList.remove('active');
+            document.getElementById('stepResults').classList.add('active');
+            
+            const scores = calculateScores();
+            renderChart(scores);
+            renderDimensions(scores);
+            renderIdealWork(scores);
+        }
+
+        function calculateScores() {
+            const scores = [0, 0, 0, 0, 0];
+            
+            questions.forEach((q, i) => {
+                let value = answers[i];
+                if (q.reverse) value = 6 - value;
+                scores[q.dim] += value;
+            });
+            
+            return scores.map(s => (s / 8).toFixed(1));
+        }
+
+        function renderChart(scores) {
+            const ctx = document.getElementById('resultsChart').getContext('2d');
+            resultsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: dimensions.map(d => d.name),
+                    datasets: [{
+                        label: 'Your Profile',
+                        data: scores,
+                        backgroundColor: 'rgba(139, 115, 85, 0.2)',
+                        borderColor: 'rgba(139, 115, 85, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(139, 115, 85, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(139, 115, 85, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            min: 0,
+                            ticks: { stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderDimensions(scores) {
+            const container = document.getElementById('dimensionsResults');
+            container.innerHTML = '';
+            
+            dimensions.forEach((dim, i) => {
+                const score = parseFloat(scores[i]);
+                const interpretation = score >= 3.5 ? dim.high : dim.low;
+                
+                container.innerHTML += `
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <div class="dimension-name">${dim.name}</div>
+                            <div class="dimension-score">${scores[i]}/5</div>
+                        </div>
+                        <div class="dimension-desc">${interpretation}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderIdealWork(scores) {
+            const suggestions = [];
+            
+            if (scores[0] >= 3.5) suggestions.push("Arbeitsumfeld mit Raum für Kreativität und Innovation");
+            else suggestions.push("Klare Prozesse und bewährte Methoden");
+            
+            if (scores[1] >= 3.5) suggestions.push("Strukturierte Aufgaben mit definierten Zielen und Deadlines");
+            else suggestions.push("Flexible Arbeitsweise mit Raum für Spontaneität");
+            
+            if (scores[2] >= 3.5) suggestions.push("Teamorientierte Rolle mit viel Interaktion");
+            else suggestions.push("Fokusarbeit mit Rückzugsmöglichkeiten");
+            
+            if (scores[3] >= 3.5) suggestions.push("Kollaborative Kultur mit Valueschätzung für Harmonie");
+            else suggestions.push("Ergebnisorientiertes Umfeld mit direkter Kommunikation");
+            
+            if (scores[4] >= 3.5) suggestions.push("Dynamisches Umfeld auch mit hohem Tempo");
+            else suggestions.push("Stabiles, vorhersehbares Arbeitsumfeld");
+            
+            document.getElementById('idealWork').innerHTML = `
+                <h3>Dein ideales Arbeitsumfeld</h3>
+                <ul>
+                    ${suggestions.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            `;
+        }
+
+        function downloadExcel() {
+            const scores = calculateScores();
+            const data = [
+                ['JUMP Work Style Assessment - Ergebnisse'],
+                [''],
+                ['Dimension', 'Score (1-5)', 'Interpretation']
+            ];
+            
+            dimensions.forEach((dim, i) => {
+                const score = parseFloat(scores[i]);
+                const interp = score >= 3.5 ? dim.high : dim.low;
+                data.push([dim.name, scores[i], interp]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Arbeits-Stil');
+            XLSX.writeFile(wb, 'JUMP_Arbeits_Stil_Assessment.xlsx');
+        }
+    </script>
+</body>
+</html>

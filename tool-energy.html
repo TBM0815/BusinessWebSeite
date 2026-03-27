@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUMP Energy Audit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .category-section {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        
+        .activity-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.1);
+        }
+        
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .activity-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .activity-name {
+            flex: 1;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .activity-controls {
+            padding-left: 39px;
+            display: none;
+        }
+        
+        .activity-controls.visible {
+            display: block;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .slider {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #dc3545 0%, #ffc107 50%, #28a745 100%);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #667eea;
+            cursor: pointer;
+        }
+        
+        .energy-display {
+            min-width: 60px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .time-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .time-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+        }
+        
+        .time-label {
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+        
+        .energy-positive {
+            color: #28a745;
+        }
+        
+        .energy-negative {
+            color: #dc3545;
+        }
+        
+        .energy-neutral {
+            color: #6c757d;
+        }
+        
+        .custom-activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .add-activity-form {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .add-activity-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+        
+        .add-activity-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-activity-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .results-section {
+            margin-top: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 15px;
+        }
+        
+        .total-energy {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .total-energy h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .energy-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .score-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .score-label {
+            color: #6c757d;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        
+        .energy-score-big {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .top-lists {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .top-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        
+        .top-list h3 {
+            margin-bottom: 20px;
+        }
+        
+        .top-list.givers h3 {
+            color: #28a745;
+        }
+        
+        .top-list.vampires h3 {
+            color: #dc3545;
+        }
+        
+        .list-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-item.giver {
+            background: #28a74515;
+            border-left: 4px solid #28a745;
+        }
+        
+        .list-item.vampire {
+            background: #dc354515;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .item-details {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .item-impact {
+            font-weight: bold;
+            font-size: 1.3em;
+            text-align: right;
+        }
+        
+        .download-section {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            margin-top: 30px;
+            border-radius: 15px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .chart-row, .top-lists, .energy-scores {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div style="position:fixed;top:16px;left:20px;z-index:9999;">
+  <a href="tools.html" style="font-family:'Outfit',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#1b3a5c;background:rgba(249,246,241,0.95);border:1px solid rgba(15,25,35,0.12);padding:8px 16px;border-radius:2px;text-decoration:none;font-weight:500;">← Tools</a>
+</div>
+
+    <div class="container">
+        <div class="header">
+            <h1>⚡ JUMP Energy Audit</h1>
+            <p>What gives you energy? What drains it?</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>Instructions</h2>
+                <p>1. <strong>Wähle die Aktivitäten aus</strong>, die auf dich zutreffen</p>
+                <p style="margin-top: 10px;">2. <strong>Bewerte jede Aktivität</strong> of -5 (raubt massiv Energie) bis +5 (gibt massiv Energie)</p>
+                <p style="margin-top: 10px;">3. <strong>Trage ein, wie viele Stunden pro Woche</strong> du mit dieser Aktivität verbringst</p>
+                <p style="margin-top: 10px;">4. <strong>Füge eigene Aktivitäten hinzu</strong>, die fehlen</p>
+                <p style="margin-top: 15px; color: #667eea;">Die Zeit-Angabe ist wichtig: Eine Aktivität mit -5 die 20h/Woche dauert, belastet dich viel stärker als eine mit -5 die nur 1h dauert.</p>
+            </div>
+            
+            <div id="activities"></div>
+            
+            <div class="custom-activity-section">
+                <h2>➕ Eigene Aktivität add</h2>
+                <p style="margin-top: 10px; color: #6c757d;">Fehlt etwas Importantes? Füge deine eigenen Aktivitäten hinzu.</p>
+                <div class="add-activity-form">
+                    <input type="text" id="customActivityName" class="add-activity-input" placeholder="z.B. 'Podcast hören beim Pendeln'">
+                    <select id="customActivityCategory" class="add-activity-input" style="flex: 0.5;">
+                        <option value="work">💼 Arbeit</option>
+                        <option value="family">👨‍👩‍👧 Familie</option>
+                        <option value="health">🏃 Sport & Gesundheit</option>
+                        <option value="hobbies">🎨 Hobbies</option>
+                        <option value="digital">📱 Digital</option>
+                        <option value="home">🏠 Haushalt</option>
+                    </select>
+                    <button class="add-activity-btn" onclick="addCustomActivity()">Hinzufügen</button>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <div class="total-energy">
+                    <h2>Deine Energy Audit Ergebnisse</h2>
+                    <div class="energy-scores">
+                        <div class="score-box">
+                            <div class="score-label">Durchschnittlicher Energy-Score</div>
+                            <div class="energy-score-big energy-neutral" id="avgEnergyScore">0</div>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-label">Wöchentlicher Energy-Impact</div>
+                            <div class="energy-score-big energy-neutral" id="totalEnergyImpact">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <h3>Zeit-Verteilung nach Energy-Typ</h3>
+                        <canvas id="timeDistChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Top Activities nach Impact</h3>
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="top-lists">
+                    <div class="top-list givers">
+                        <h3>🌟 Top 5 Energy-Geber (nach Impact)</h3>
+                        <div id="topGivers"></div>
+                    </div>
+                    <div class="top-list vampires">
+                        <h3>🧛 Top 5 Energy-Vampire (nach Impact)</h3>
+                        <div id="topVampires"></div>
+                    </div>
+                </div>
+                
+                <div class="download-section">
+                    <h2 style="margin-bottom: 20px; color: #333;">Deine Energy Audit Ergebnisse</h2>
+                    <button class="download-btn" onclick="downloadExcel()">📊 Excel herunterladen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categories = {
+            work: {
+                name: "💼 Arbeit",
+                activities: [
+                    "Team-Meetings",
+                    "Emails edit",
+                    "Strategische Projekte",
+                    "1-on-1 Gespräche",
+                    "Reporting & Admin",
+                    "Präsentationen halten",
+                    "Probleme lösen",
+                    "Neue Ideen entwickeln"
+                ]
+            },
+            family: {
+                name: "👨‍👩‍👧 Familie & Soziales",
+                activities: [
+                    "Zeit mit Partner",
+                    "Zeit mit Kindern",
+                    "Treffen mit Freunden",
+                    "Familienessen",
+                    "Telefonate mit Familie"
+                ]
+            },
+            health: {
+                name: "🏃 Sport & Gesundheit",
+                activities: [
+                    "Sport treiben",
+                    "Spazieren gehen",
+                    "Meditation",
+                    "Yoga",
+                    "Gesund kochen"
+                ]
+            },
+            hobbies: {
+                name: "🎨 Hobbies & Freizeit",
+                activities: [
+                    "Musik machen",
+                    "Lesen",
+                    "Kreative Projekte",
+                    "Lernen (neue Skills)"
+                ]
+            },
+            digital: {
+                name: "📱 Digital & Medien",
+                activities: [
+                    "Social Media scrollen",
+                    "Nachrichten lesen",
+                    "Serien schauen",
+                    "Gaming"
+                ]
+            },
+            home: {
+                name: "🏠 Haushalt & Alltag",
+                activities: [
+                    "Hausarbeit",
+                    "Einkaufen",
+                    "Pendeln zur Arbeit",
+                    "Verwaltungskram"
+                ]
+            }
+        };
+
+        const activities = {};
+        let timeDistChart = null;
+        let impactChart = null;
+        let customActivityCounter = 0;
+
+        function renderActivities() {
+            const container = document.getElementById('activities');
+            
+            Object.keys(categories).forEach(catKey => {
+                const category = categories[catKey];
+                
+                const catSection = document.createElement('div');
+                catSection.className = 'category-section';
+                catSection.dataset.category = catKey;
+                
+                const catHeader = document.createElement('div');
+                catHeader.className = 'category-header';
+                catHeader.innerHTML = `<div class="category-title">${category.name}</div>`;
+                catSection.appendChild(catHeader);
+                
+                category.activities.forEach((activity, index) => {
+                    const activityId = `${catKey}_${index}`;
+                    activities[activityId] = {
+                        name: activity,
+                        category: catKey,
+                        enabled: false,
+                        score: 0,
+                        hours: 0
+                    };
+                    
+                    const activityDiv = createActivityElement(activityId, activity);
+                    catSection.appendChild(activityDiv);
+                });
+                
+                container.appendChild(catSection);
+            });
+            
+            initCharts();
+            updateResults();
+        }
+
+        function createActivityElement(id, name) {
+            const div = document.createElement('div');
+            div.className = 'activity-item';
+            div.id = `activity_${id}`;
+            
+            div.innerHTML = `
+                <div class="activity-header">
+                    <input type="checkbox" class="activity-checkbox" id="check_${id}" onchange="toggleActivity('${id}')">
+                    <label for="check_${id}" class="activity-name">${name}</label>
+                </div>
+                <div class="activity-controls" id="controls_${id}">
+                    <div class="slider-container">
+                        <span style="color: #dc3545; font-weight: 600;">-5</span>
+                        <input type="range" min="-5" max="5" value="0" class="slider" id="score_${id}" oninput="updateScore('${id}')">
+                        <span style="color: #28a745; font-weight: 600;">+5</span>
+                        <div class="energy-display energy-neutral" id="display_${id}">0</div>
+                    </div>
+                    <div class="time-input-container">
+                        <span class="time-label">Stunden pro Woche:</span>
+                        <input type="number" min="0" max="168" step="0.5" value="0" class="time-input" id="hours_${id}" oninput="updateHours('${id}')">
+                        <span class="time-label">h</span>
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        function toggleActivity(id) {
+            const checkbox = document.getElementById(`check_${id}`);
+            const controls = document.getElementById(`controls_${id}`);
+            activities[id].enabled = checkbox.checked;
+            
+            if (checkbox.checked) {
+                controls.classList.add('visible');
+            } else {
+                controls.classList.remove('visible');
+            }
+            
+            updateResults();
+        }
+
+        function updateScore(id) {
+            const score = parseInt(document.getElementById(`score_${id}`).value);
+            activities[id].score = score;
+            
+            const display = document.getElementById(`display_${id}`);
+            display.textContent = score > 0 ? `+${score}` : score;
+            
+            display.className = 'energy-display';
+            if (score > 0) display.classList.add('energy-positive');
+            else if (score < 0) display.classList.add('energy-negative');
+            else display.classList.add('energy-neutral');
+            
+            updateResults();
+        }
+
+        function updateHours(id) {
+            const hours = parseFloat(document.getElementById(`hours_${id}`).value) || 0;
+            activities[id].hours = hours;
+            updateResults();
+        }
+
+        function addCustomActivity() {
+            const nameInput = document.getElementById('customActivityName');
+            const categorySelect = document.getElementById('customActivityCategory');
+            
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert('Bitte gib einen Namen für die Aktivität ein.');
+                return;
+            }
+            
+            const catKey = categorySelect.value;
+            const id = `custom_${customActivityCounter++}`;
+            
+            activities[id] = {
+                name: name,
+                category: catKey,
+                enabled: true,
+                score: 0,
+                hours: 0
+            };
+            
+            const targetSection = document.querySelector(`.category-section[data-category="${catKey}"]`);
+            
+            if (targetSection) {
+                const activityDiv = createActivityElement(id, name);
+                targetSection.appendChild(activityDiv);
+                
+                document.getElementById(`check_${id}`).checked = true;
+                document.getElementById(`controls_${id}`).classList.add('visible');
+            }
+            
+            nameInput.value = '';
+            updateResults();
+        }
+
+        function initCharts() {
+            const timeDistCtx = document.getElementById('timeDistChart').getContext('2d');
+            timeDistChart = new Chart(timeDistCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Energy-Geber (+)', 'Neutral (0)', 'Energy-Vampire (-)'],
+                    datasets: [{
+                        data: [0, 1, 0],
+                        backgroundColor: ['#28a745', '#6c757d', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + 'h';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const impactCtx = document.getElementById('impactChart').getContext('2d');
+            impactChart = new Chart(impactCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Energy Impact',
+                        data: [],
+                        backgroundColor: []
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Impact (Score × Stunden)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateResults() {
+            const enabled = Object.keys(activities).filter(id => activities[id].enabled);
+            
+            if (enabled.length === 0) {
+                document.getElementById('avgEnergyScore').textContent = '0';
+                document.getElementById('totalEnergyImpact').textContent = '0';
+                return;
+            }
+            
+            const scores = enabled.map(id => activities[id].score);
+            const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+            
+            const totalImpact = enabled.reduce((sum, id) => {
+                return sum + (activities[id].score * activities[id].hours);
+            }, 0);
+            
+            const avgDisplay = document.getElementById('avgEnergyScore');
+            avgDisplay.textContent = avg > 0 ? `+${avg}` : avg;
+            avgDisplay.className = 'energy-score-big';
+            if (avg > 0) avgDisplay.classList.add('energy-positive');
+            else if (avg < 0) avgDisplay.classList.add('energy-negative');
+            else avgDisplay.classList.add('energy-neutral');
+            
+            const impactDisplay = document.getElementById('totalEnergyImpact');
+            impactDisplay.textContent = totalImpact > 0 ? `+${totalImpact.toFixed(0)}` : totalImpact.toFixed(0);
+            impactDisplay.className = 'energy-score-big';
+            if (totalImpact > 0) impactDisplay.classList.add('energy-positive');
+            else if (totalImpact < 0) impactDisplay.classList.add('energy-negative');
+            else impactDisplay.classList.add('energy-neutral');
+            
+            const giverHours = enabled.filter(id => activities[id].score > 0)
+                .reduce((sum, id) => sum + activities[id].hours, 0);
+            const neutralHours = enabled.filter(id => activities[id].score === 0)
+                .reduce((sum, id) => sum + activities[id].hours, 0);
+            const vampireHours = enabled.filter(id => activities[id].score < 0)
+                .reduce((sum, id) => sum + activities[id].hours, 0);
+            
+            timeDistChart.data.datasets[0].data = [giverHours, neutralHours, vampireHours];
+            timeDistChart.update();
+            
+            const withImpact = enabled
+                .map(id => ({
+                    id,
+                    ...activities[id],
+                    impact: activities[id].score * activities[id].hours
+                }))
+                .filter(a => a.hours > 0)
+                .sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact))
+                .slice(0, 8);
+            
+            impactChart.data.labels = withImpact.map(a => a.name);
+            impactChart.data.datasets[0].data = withImpact.map(a => a.impact);
+            impactChart.data.datasets[0].backgroundColor = withImpact.map(a => 
+                a.impact > 0 ? '#28a745' : a.impact < 0 ? '#dc3545' : '#6c757d'
+            );
+            impactChart.update();
+            
+            updateTopLists(enabled);
+        }
+
+        function updateTopLists(enabled) {
+            const topGivers = enabled
+                .map(id => ({
+                    id,
+                    ...activities[id],
+                    impact: activities[id].score * activities[id].hours
+                }))
+                .filter(a => a.impact > 0)
+                .sort((a, b) => b.impact - a.impact)
+                .slice(0, 5);
+            
+            const topVampires = enabled
+                .map(id => ({
+                    id,
+                    ...activities[id],
+                    impact: activities[id].score * activities[id].hours
+                }))
+                .filter(a => a.impact < 0)
+                .sort((a, b) => a.impact - b.impact)
+                .slice(0, 5);
+            
+            document.getElementById('topGivers').innerHTML = topGivers.length > 0
+                ? topGivers.map(a => `
+                    <div class="list-item giver">
+                        <div class="item-info">
+                            <div class="item-name">${a.name}</div>
+                            <div class="item-details">Score: +${a.score} × ${a.hours}h/Woche</div>
+                        </div>
+                        <div class="item-impact energy-positive">+${a.impact.toFixed(0)}</div>
+                    </div>
+                `).join('')
+                : '<p style="color: #6c757d;">Keine Energy-Vampire bewertet</p>';
+
+            document.getElementById('topVampires').innerHTML = topVampires.length > 0
+                ? topVampires.map(a => `
+                    <div class="list-item vampire">
+                        <div class="item-info">
+                            <div class="item-name">${a.name}</div>
+                            <div class="item-details">Score: ${a.score} × ${a.hours}h/Woche</div>
+                        </div>
+                        <div class="item-impact energy-negative">${a.impact.toFixed(0)}</div>
+                    </div>
+                `).join('')
+                : '<p style="color: #6c757d;">Keine Energy-Vampire bewertet</p>';
+        }
+
+        function downloadExcel() {
+            const data = [
+                ['JUMP Energy Audit - Ergebnisse'],
+                [''],
+                ['Aktivität', 'Kategorie', 'Energy Score', 'Stunden/Woche', 'Impact (Score × Stunden)']
+            ];
+            
+            const enabled = Object.keys(activities)
+                .filter(id => activities[id].enabled)
+                .map(id => ({
+                    id,
+                    ...activities[id],
+                    impact: activities[id].score * activities[id].hours
+                }))
+                .sort((a, b) => b.impact - a.impact);
+            
+            enabled.forEach(activity => {
+                data.push([
+                    activity.name,
+                    categories[activity.category].name,
+                    activity.score,
+                    activity.hours,
+                    activity.impact.toFixed(1)
+                ]);
+            });
+            
+            const scores = enabled.map(a => a.score);
+            const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 0;
+            const totalImpact = enabled.reduce((sum, a) => sum + a.impact, 0).toFixed(1);
+            
+            data.push(['']);
+            data.push(['DURCHSCHNITTLICHER ENERGY-SCORE', '', avgScore, '', '']);
+            data.push(['WÖCHENTLICHER ENERGY-IMPACT', '', '', '', totalImpact]);
+            
+            const giverHours = enabled.filter(a => a.score > 0).reduce((sum, a) => sum + a.hours, 0);
+            const vampireHours = enabled.filter(a => a.score < 0).reduce((sum, a) => sum + a.hours, 0);
+            const neutralHours = enabled.filter(a => a.score === 0).reduce((sum, a) => sum + a.hours, 0);
+            
+            data.push(['']);
+            data.push(['ZEIT-VERTEILUNG', '', '', '', '']);
+            data.push(['Stunden mit Energy-Gebern', '', '', giverHours, '']);
+            data.push(['Stunden mit Energy-Vampiren', '', '', vampireHours, '']);
+            data.push(['Stunden Neutral', '', '', neutralHours, '']);
+            
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Energy Audit');
+            
+            XLSX.writeFile(wb, 'JUMP_Energy_Audit.xlsx');
+        }
+
+        renderActivities();
+    </script>
+</body>
+</html> Energy-Geber bewertet</p>';
+            
+            document.getElementById('topVampires').innerHTML = topVampires.length > 0
+                ? topVampires.map(a => `
+                    <div class="list-item vampire">
+                        <div class="item-info">
+                            <div class="item-name">${a.name}</div>
+                            <div class="item-details">Score: ${a.score} × ${a.hours}h/Woche</div>
+                        </div>
+                        <div class="item-impact energy-negative">${a.impact.toFixed(0)}</div>
+                    </div>
+                `).join('')
+                : '<p style="color: #6c757d;">Keine

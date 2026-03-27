@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Values Clarity · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#f9f6f1;--cream2:#ffffff;--ink:#0f1923;--ink-soft:rgba(15,25,35,0.65);
+  --blue-dark:#1b3a5c;--blue-mid:#2e6e9e;--gold:#c8a45a;--jump-orange:#e84a0c;--border:rgba(15,25,35,0.1);
+  --cv:#1b3a5c;--cm:#e84a0c;--cs:#2a9d8f;--cc:#7b5ea7;--co:#c8a45a;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#fffbf0 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(200,164,90,0.08) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--gold);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#7a5c20;font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:560px;line-height:1.75;}
+.main{max-width:720px;margin:0 auto;padding:0 60px 100px;}
+.explainer{background:var(--cream2);border:1px solid var(--border);padding:32px 36px;margin:40px 0;border-radius:2px;}
+.explainer-title{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:600;color:var(--ink);margin-bottom:20px;}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.cat-item{padding:14px 16px;border-radius:2px;border-left:3px solid;}
+.cat-item.v{border-color:var(--cv);background:rgba(27,58,92,0.04);}
+.cat-item.m{border-color:var(--cm);background:rgba(232,74,12,0.04);}
+.cat-item.s{border-color:var(--cs);background:rgba(42,157,143,0.04);}
+.cat-item.c{border-color:var(--cc);background:rgba(123,94,167,0.04);}
+.cat-item.o{border-color:var(--co);background:rgba(200,164,90,0.06);}
+.cat-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.cat-item.v .cat-label{color:var(--cv);}
+.cat-item.m .cat-label{color:var(--cm);}
+.cat-item.s .cat-label{color:var(--cs);}
+.cat-item.c .cat-label{color:var(--cc);}
+.cat-item.o .cat-label{color:var(--co);}
+.cat-desc{font-size:12px;color:var(--ink-soft);line-height:1.5;}
+.explainer-note{font-size:13px;color:var(--ink-soft);line-height:1.75;font-style:italic;border-top:1px solid var(--border);padding-top:16px;}
+.step-indicator{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;margin:40px 0 48px;}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);border:1.5px solid var(--border);transition:all 0.3s;flex-shrink:0;}
+.step-dot.active{background:var(--blue-dark);border-color:var(--blue-dark);width:28px;border-radius:5px;}
+.step-dot.completed{background:var(--gold);border-color:var(--gold);}
+.step-line{width:24px;height:1px;background:var(--border);flex-shrink:0;}
+.step-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin:0 6px;}
+.step-content{display:none;}
+.step-content.active{display:block;animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.progress-wrap{margin-bottom:36px;}
+.progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-bottom:8px;}
+.progress-bar{height:2px;background:var(--border);border-radius:1px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gold);transition:width 0.3s ease;}
+.value-card{background:var(--cream2);border:1px solid var(--border);border-top:3px solid var(--gold);padding:48px 40px;text-align:center;margin-bottom:28px;border-radius:2px;}
+.vcbadge{display:inline-block;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:3px 10px;border-radius:2px;margin-bottom:16px;}
+.bv{color:var(--cv);background:rgba(27,58,92,0.08);}
+.bm{color:var(--cm);background:rgba(232,74,12,0.08);}
+.bs{color:var(--cs);background:rgba(42,157,143,0.08);}
+.bc{color:var(--cc);background:rgba(123,94,167,0.08);}
+.bo{color:var(--co);background:rgba(200,164,90,0.1);}
+.value-name{font-family:"Cormorant Garamond",serif;font-size:3rem;font-weight:600;color:var(--ink);margin-bottom:14px;line-height:1;}
+.value-desc{font-size:14px;color:var(--ink-soft);line-height:1.75;max-width:400px;margin:0 auto;}
+.button-group{display:flex;gap:12px;justify-content:center;}
+.btn-skip{background:transparent;color:var(--ink-soft);border:1.5px solid var(--border);padding:14px 36px;border-radius:2px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:500;cursor:pointer;font-family:"Outfit",sans-serif;transition:all 0.2s;}
+.btn-skip:hover{border-color:var(--jump-orange);color:var(--jump-orange);}
+.btn-keep{background:var(--blue-dark);color:var(--cream);border:1.5px solid var(--blue-dark);padding:14px 36px;border-radius:2px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;font-family:"Outfit",sans-serif;transition:all 0.2s;}
+.btn-keep:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.keyboard-hint{text-align:center;margin-top:14px;font-size:11px;color:var(--ink-soft);}
+.keyboard-hint kbd{background:var(--border);padding:2px 7px;border-radius:2px;font-size:10px;font-family:inherit;}
+.intro-box{background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:20px 24px;margin-bottom:24px;border-radius:2px;}
+.intro-box h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#7a5c20;font-weight:600;margin-bottom:8px;}
+.intro-box p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:6px;}
+.intro-box p:last-child{margin-bottom:0;}
+.intro-box strong{color:var(--ink);}
+.instruction{font-size:12px;color:var(--ink-soft);margin-bottom:18px;}
+.instruction span{color:var(--blue-dark);font-weight:600;}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:24px;}
+.value-item{background:var(--cream2);border:1.5px solid var(--border);padding:14px 12px;text-align:center;cursor:pointer;transition:all 0.2s;border-radius:2px;position:relative;}
+.value-item:hover{border-color:var(--blue-mid);transform:translateY(-2px);}
+.value-item.selected{background:var(--blue-dark);border-color:var(--blue-dark);color:var(--cream);}
+.value-item-name{font-size:13px;font-weight:500;line-height:1.3;}
+.value-item-cat{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:0.6;margin-top:3px;}
+.rank-badge{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--gold);color:var(--ink);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.btn{background:var(--blue-dark);color:var(--cream);border:none;padding:15px 40px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:600;font-family:"Outfit",sans-serif;transition:all 0.2s;display:block;margin:0 auto;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--blue-dark);border:1.5px solid var(--blue-dark);margin-top:12px;}
+.btn-outline:hover{background:var(--blue-dark);color:var(--cream);}
+.behavior-card{background:var(--cream2);border:1px solid var(--border);border-top:3px solid var(--gold);padding:32px;margin-bottom:20px;border-radius:2px;}
+.behavior-value-name{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.behavior-rank{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px;}
+.field-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;margin-bottom:8px;}
+.field-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:2px;font-size:14px;font-family:"Outfit",sans-serif;color:var(--ink);background:var(--cream);outline:none;transition:border-color 0.2s;margin-bottom:16px;}
+.field-input:focus{border-color:var(--blue-mid);}
+.field-input::placeholder{color:rgba(15,25,35,0.3);}
+.behaviors-wrap{display:flex;flex-direction:column;gap:8px;}
+.behavior-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:2px;font-size:13px;font-family:"Outfit",sans-serif;color:var(--ink);background:var(--cream);outline:none;transition:border-color 0.2s;}
+.behavior-input:focus{border-color:var(--blue-mid);}
+.behavior-input::placeholder{color:rgba(15,25,35,0.3);}
+.result-analysis{background:var(--blue-dark);color:var(--cream);padding:40px;border-radius:2px;margin-bottom:32px;}
+.analysis-eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:16px;}
+.analysis-text{font-size:1rem;line-height:1.85;font-weight:300;}
+.analysis-text strong{color:var(--gold);font-weight:600;}
+.also-important{margin-bottom:32px;}
+.also-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin-bottom:16px;}
+.also-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.also-tag{font-size:12px;padding:6px 14px;border:1px solid var(--border);border-radius:2px;color:var(--ink-soft);}
+.also-tag .tag-cat{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:0.6;margin-left:6px;}
+.charter-title{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--ink);margin-bottom:24px;}
+.charter-item{background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:28px 32px;margin-bottom:16px;border-radius:2px;}
+.charter-rank{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+.charter-name{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--ink);margin-bottom:16px;}
+.charter-outcome-label,.charter-behaviors-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+.charter-outcome-label{color:var(--blue-mid);}
+.charter-behaviors-label{color:var(--ink-soft);margin-top:12px;}
+.charter-outcome{font-size:15px;color:var(--ink);font-weight:400;margin-bottom:4px;line-height:1.6;}
+.charter-behavior{font-size:13px;color:var(--ink-soft);margin-bottom:5px;padding-left:14px;position:relative;line-height:1.5;}
+.charter-behavior::before{content:"·";position:absolute;left:0;color:var(--gold);font-weight:700;}
+.actions-row{display:flex;gap:12px;justify-content:center;margin-top:36px;flex-wrap:wrap;}
+.cta-note{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:16px;}
+.cta-note a{color:var(--blue-mid);text-decoration:none;border-bottom:1px solid rgba(46,110,158,0.3);}
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 50px;}
+  .main{padding:0 24px 80px;}
+  .cat-grid{grid-template-columns:1fr;}
+  .value-card{padding:36px 24px;}
+  .value-name{font-size:2.2rem;}
+  .button-group{flex-direction:column;}
+  .values-grid{grid-template-columns:1fr 1fr;}
+  .step-label{display:none;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow"><div class="eyebrow-line"></div><span>JUMP · Self-assessment</span></div>
+  <h1 class="hero-title"><em>Values</em> Clarity</h1>
+  <p class="hero-sub">100 values, motivators and drivers. Four steps. A personal values charter that goes beyond a list — into what your values actually mean for how you live and work.</p>
+</div>
+<div class="main">
+  <div class="explainer">
+    <div class="explainer-title">Not all "values" are the same thing</div>
+    <div class="cat-grid">
+      <div class="cat-item v"><div class="cat-label">Core Values</div><div class="cat-desc">Guiding principles that shape decisions regardless of circumstances. <em>Integrity, Honesty, Fairness, Trust</em></div></div>
+      <div class="cat-item m"><div class="cat-label">Motivators</div><div class="cat-desc">What drives and energises you. <em>Challenge, Creativity, Growth, Recognition</em></div></div>
+      <div class="cat-item s"><div class="cat-label">States</div><div class="cat-desc">Conditions you want to live and work in. <em>Peace, Freedom, Security, Harmony</em></div></div>
+      <div class="cat-item c"><div class="cat-label">Character Traits</div><div class="cat-desc">Who you want to be. <em>Courage, Wisdom, Empathy, Discipline</em></div></div>
+      <div class="cat-item o"><div class="cat-label">Outcomes</div><div class="cat-desc">Results you want to create in the world. <em>Impact, Legacy, Prosperity, Success</em></div></div>
+    </div>
+    <div class="explainer-note">We deliberately include all five types. Whether something is a value, a motivator or a desired state — if it influences your decisions and behaviour, it matters. The tool analyses which types dominate your profile and reflects that back to you.</div>
+  </div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot1"></div><div class="step-label">Keep or skip</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot2"></div><div class="step-label">Top 10</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot3"></div><div class="step-label">Top 3</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot4"></div><div class="step-label">Charter</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot5"></div><div class="step-label">Results</div>
+  </div>
+  <!-- STEP 1 -->
+  <div class="step-content active" id="step1">
+    <div class="intro-box">
+      <h3>Step 1 of 4 · Keep or skip</h3>
+      <p>Go through all 100 terms. Click <strong>Keep</strong> if it resonates — don't overthink it. Your first instinct is usually right.</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-info"><span>Term <span id="currentIndex">1</span> of 100</span><span id="keptSoFar">0 kept</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressBar1" style="width:0%"></div></div>
+    </div>
+    <div class="value-card">
+      <div class="vcbadge" id="valueBadge"></div>
+      <div class="value-name" id="valueName"></div>
+      <div class="value-desc" id="valueDesc"></div>
+    </div>
+    <div class="button-group">
+      <button class="btn-skip" onclick="skipValue()">✕ &nbsp;Skip</button>
+      <button class="btn-keep" onclick="keepValue()">✓ &nbsp;Keep</button>
+    </div>
+    <div class="keyboard-hint">Keyboard: <kbd>←</kbd> Skip &nbsp; <kbd>→</kbd> Keep</div>
+  </div>
+  <!-- STEP 2 -->
+  <div class="step-content" id="step2">
+    <div class="intro-box">
+      <h3>Step 2 of 4 · Your top 10</h3>
+      <p>You kept <strong><span id="keptCount">0</span> terms</strong>. Now select the <strong>10 that matter most</strong> — click in order of importance (1 = most important).</p>
+    </div>
+    <div class="instruction">Click to select · <span id="selectedCount2">0</span>/10 selected</div>
+    <div class="values-grid" id="selectedValues2"></div>
+    <button class="btn" onclick="goToStep3()" id="finishBtn2" style="display:none;">Continue to top 3 →</button>
+  </div>
+  <!-- STEP 3 -->
+  <div class="step-content" id="step3">
+    <div class="intro-box">
+      <h3>Step 3 of 4 · Your top 3</h3>
+      <p>From your top 10, select the <strong>3 that are truly your core</strong> — the ones you would never compromise on.</p>
+    </div>
+    <div class="instruction">Click to select · <span id="selectedCount3">0</span>/3 selected</div>
+    <div class="values-grid" id="selectedValues3"></div>
+    <button class="btn" onclick="goToStep4()" id="finishBtn3" style="display:none;">Define what they mean →</button>
+  </div>
+  <!-- STEP 4 -->
+  <div class="step-content" id="step4">
+    <div class="intro-box">
+      <h3>Step 4 of 4 · Your values charter</h3>
+      <p>For each of your top 3, write an <strong>outcome statement</strong> (what this value means in practice) and <strong>2–3 concrete behaviors</strong> (how you live this value day to day).</p>
+      <p><em>Example — Integrity · Outcome: "Do the right thing." · Behaviors: "Tell the truth. Be ethical in all I do. Be trustworthy."</em></p>
+    </div>
+    <div id="behaviorCards"></div>
+    <button class="btn" onclick="goToResults()">See my full results →</button>
+  </div>
+  <!-- STEP 5 -->
+  <div class="step-content" id="step5">
+    <div class="result-analysis" id="analysisBlock"></div>
+    <div class="also-important">
+      <div class="also-title">Also important to you (ranks 4–10)</div>
+      <div class="also-tags" id="alsoTags"></div>
+    </div>
+    <div class="charter-title">Your personal values charter</div>
+    <div id="charterItems"></div>
+    <div class="actions-row">
+      <button class="btn" onclick="downloadCSV()">Download as CSV</button>
+      <button class="btn btn-outline" onclick="restart()">Start again</button>
+    </div>
+    <p class="cta-note">Want to explore what these mean for your next move? <a href="teamworx_website.html#contact">Book a free JUMP conversation.</a></p>
+  </div>
+</div>
+<script>
+const ALL = [
+  {name:"Truth",cat:"V",desc:"Acting and speaking in alignment with reality — no pretence, no spin"},
+  {name:"Integrity",cat:"V",desc:"Doing the right thing even when no one is watching"},
+  {name:"Honesty",cat:"V",desc:"Transparency and straightforwardness in all communication"},
+  {name:"Fairness",cat:"V",desc:"Equal treatment and just processes for everyone"},
+  {name:"Justice",cat:"V",desc:"Upholding what is right — for individuals and society"},
+  {name:"Loyalty",cat:"V",desc:"Staying committed to people and principles over time"},
+  {name:"Respect",cat:"V",desc:"Treating everyone with dignity, regardless of status"},
+  {name:"Trust",cat:"V",desc:"Being reliable and creating psychological safety around you"},
+  {name:"Sincerity",cat:"V",desc:"Genuineness and authenticity in how you show up"},
+  {name:"Commitment",cat:"V",desc:"Following through on what you say you will do"},
+  {name:"Honor",cat:"V",desc:"Living by a code of conduct you are proud of"},
+  {name:"Dependability",cat:"V",desc:"Being someone others can count on completely"},
+  {name:"Stewardship",cat:"V",desc:"Taking responsible care of what is entrusted to you"},
+  {name:"Equality",cat:"V",desc:"Believing in the equal worth and rights of all people"},
+  {name:"Diversity",cat:"V",desc:"Valuing and actively including different perspectives"},
+  {name:"Environment",cat:"V",desc:"Caring for the natural world and future generations"},
+  {name:"Spirituality",cat:"V",desc:"Connection to something larger than yourself — nature, faith or meaning"},
+  {name:"Purposefulness",cat:"V",desc:"Everything you do connects to a deeper reason for being"},
+  {name:"Communication",cat:"V",desc:"Clear, honest and open exchange as a foundation of everything"},
+  {name:"Professionalism",cat:"V",desc:"Consistently high standards and reliable conduct"},
+  {name:"Service",cat:"V",desc:"Contributing to others as a core part of how you operate"},
+  {name:"Obedience",cat:"V",desc:"Respecting rules, structures and legitimate authority"},
+  {name:"Cooperation",cat:"V",desc:"Working with others generously and constructively"},
+  {name:"Curiosity",cat:"M",desc:"A relentless drive to understand, explore and learn"},
+  {name:"Creativity",cat:"M",desc:"Generating new ideas and finding novel approaches"},
+  {name:"Learning",cat:"M",desc:"Continuously developing knowledge and capability"},
+  {name:"Innovation",cat:"M",desc:"Creating new things and pushing boundaries"},
+  {name:"Challenge",cat:"M",desc:"Being stretched — difficult goals drive your best work"},
+  {name:"Competition",cat:"M",desc:"Performing at your best when measured against others"},
+  {name:"Excitement",cat:"M",desc:"Energy and variety — you thrive when things are dynamic"},
+  {name:"Adventure",cat:"M",desc:"Seeking new experiences and stepping into the unknown"},
+  {name:"Hard Work",cat:"M",desc:"Effort and dedication as the engine of achievement"},
+  {name:"Risk-Taking",cat:"M",desc:"Willingness to act despite uncertainty"},
+  {name:"Efficiency",cat:"M",desc:"Getting the most from time, energy and resources"},
+  {name:"Excellence",cat:"M",desc:"Pursuing the highest standard in everything you do"},
+  {name:"Quality",cat:"M",desc:"Care and precision — done right or not at all"},
+  {name:"Initiative",cat:"M",desc:"Acting without being asked — seeing what needs doing and doing it"},
+  {name:"Variety",cat:"M",desc:"Different contexts, roles and problems keep you engaged"},
+  {name:"Fun",cat:"M",desc:"Enjoyment and lightness are not optional — they are fuel"},
+  {name:"Peace",cat:"S",desc:"An inner and outer calm that allows clear thinking"},
+  {name:"Happiness",cat:"S",desc:"Genuine wellbeing and satisfaction in daily life"},
+  {name:"Freedom",cat:"S",desc:"The ability to make your own choices without constraint"},
+  {name:"Harmony",cat:"S",desc:"Alignment between your roles, relationships and commitments"},
+  {name:"Family Harmony",cat:"S",desc:"A home environment that is loving, stable and connected"},
+  {name:"Financial Security",cat:"S",desc:"Enough stability that money is not a constant source of stress"},
+  {name:"Health",cat:"S",desc:"Physical and mental wellbeing as the foundation for everything"},
+  {name:"Clarity",cat:"S",desc:"Knowing where you stand and where you are going"},
+  {name:"Autonomy",cat:"S",desc:"Self-direction — working on your own terms"},
+  {name:"Flexibility",cat:"S",desc:"The ability to adapt your working life to changing needs"},
+  {name:"Order",cat:"S",desc:"Clear structures and predictable environments"},
+  {name:"Comfortable Home",cat:"S",desc:"A physical space that is restorative and feels like you"},
+  {name:"Having Adequate Resources",cat:"S",desc:"The tools, time and support to do your work properly"},
+  {name:"Independence",cat:"S",desc:"Not relying on others for your direction or stability"},
+  {name:"Friendship",cat:"S",desc:"Deep, meaningful connections with people who know you"},
+  {name:"Family",cat:"S",desc:"Your closest relationships as a source of meaning and belonging"},
+  {name:"Work-Life Balance",cat:"S",desc:"Space for both professional fulfilment and personal life"},
+  {name:"Calm",cat:"S",desc:"A measured pace and low-stress environment"},
+  {name:"Simplicity",cat:"S",desc:"Freedom from unnecessary complexity in how you live and work"},
+  {name:"Courage",cat:"C",desc:"Acting on your convictions even when it is uncomfortable"},
+  {name:"Persistence",cat:"C",desc:"Continuing through obstacles without losing direction"},
+  {name:"Discipline",cat:"C",desc:"Consistent action aligned with your priorities"},
+  {name:"Patience",cat:"C",desc:"Staying present and steady when things take time"},
+  {name:"Empathy",cat:"C",desc:"Genuinely understanding and connecting with others' experience"},
+  {name:"Open-mindedness",cat:"C",desc:"Staying genuinely receptive to new ideas and perspectives"},
+  {name:"Wisdom",cat:"C",desc:"Applying knowledge and experience with good judgement"},
+  {name:"Intelligence",cat:"C",desc:"Sharp thinking and the ability to understand complex things"},
+  {name:"Decisiveness",cat:"C",desc:"Making clear decisions without unnecessary delay"},
+  {name:"Self-control",cat:"C",desc:"Managing your impulses and reactions with intention"},
+  {name:"Strength",cat:"C",desc:"Resilience and the capacity to handle difficulty"},
+  {name:"Responsiveness",cat:"C",desc:"Being present, attentive and quick to act on what matters"},
+  {name:"Perspective",cat:"C",desc:"Seeing situations from multiple angles before acting"},
+  {name:"Cleverness",cat:"C",desc:"Finding smart solutions that others miss"},
+  {name:"Originality",cat:"C",desc:"Bringing your own voice and approach to everything you do"},
+  {name:"Humor",cat:"C",desc:"Lightness and wit as a way of connecting and leading"},
+  {name:"Collaboration",cat:"C",desc:"Achieving more together than apart — actively sharing and building"},
+  {name:"Self-reliance",cat:"C",desc:"Trusting your own judgement and capabilities"},
+  {name:"Financial Growth",cat:"O",desc:"Building increasing wealth and financial opportunity over time"},
+  {name:"Profitability",cat:"O",desc:"Generating returns that sustain and grow what you build"},
+  {name:"Success",cat:"O",desc:"Achieving the goals you set for yourself — on your own terms"},
+  {name:"Prosperity",cat:"O",desc:"Abundance in multiple dimensions — not just financial"},
+  {name:"Prestige",cat:"O",desc:"A reputation and standing that opens doors"},
+  {name:"Fulfillment",cat:"O",desc:"A deep sense that your work and life are truly worth it"},
+  {name:"Legacy",cat:"O",desc:"Creating something that outlasts your direct involvement"},
+  {name:"Competence",cat:"O",desc:"Being genuinely excellent at your craft — recognised for it"},
+  {name:"Effectiveness",cat:"O",desc:"Getting meaningful things done — not just being busy"},
+  {name:"Community Support",cat:"O",desc:"Contributing to the people and places around you"},
+  {name:"Influence",cat:"O",desc:"Shaping decisions, culture and outcomes beyond your direct role"},
+  {name:"Recognition",cat:"O",desc:"Being seen and valued for your contributions"},
+  {name:"Growth",cat:"O",desc:"Continuous development with visible results"},
+  {name:"Productivity",cat:"O",desc:"Output that reflects your capabilities and effort"},
+  {name:"Power",cat:"O",desc:"The ability to make things happen and shape your environment"},
+  {name:"Impact",cat:"O",desc:"Creating visible, meaningful change in the world"},
+  {name:"Love",cat:"O",desc:"Giving and receiving deep care as a central outcome of your life"},
+  {name:"Relationships",cat:"O",desc:"Building lasting, meaningful connections that enrich your life"},
+  {name:"Provide a Legacy",cat:"O",desc:"Leaving something lasting for the people who come after"},
+  {name:"Beauty",cat:"O",desc:"Creating or being surrounded by things of aesthetic quality"},
+  {name:"Teamwork",cat:"V",desc:"Building genuine collective effort and mutual accountability"},
+  {name:"Leadership",cat:"C",desc:"Guiding others toward shared goals with clarity and care"},
+];
+
+const CL = {V:"Core Value",M:"Motivator",S:"State",C:"Character Trait",O:"Outcome"};
+const CB = {V:"bv",M:"bm",S:"bs",C:"bc",O:"bo"};
+const DOMINANT_NOTES = {
+  V:"Your profile is strongly values-driven — you make decisions based on principles, not just outcomes.",
+  M:"You are highly motivated — energy and drive are central to who you are.",
+  S:"You prioritise quality of experience — how you live matters as much as what you achieve.",
+  C:"Character is central for you — you care deeply about who you are becoming.",
+  O:"You are outcome-oriented — what you build and leave behind matters most."
+};
+
+let idx=0,kept=[],top10=[],top3=[],beh={};
+
+function init(){
+  showValue();
+  document.addEventListener('keydown',e=>{
+    if(document.getElementById('step1').classList.contains('active')){
+      if(e.key==='ArrowRight')keepValue();
+      if(e.key==='ArrowLeft')skipValue();
+    }
+  });
+}
+
+function showValue(){
+  if(idx>=ALL.length){moveToStep2();return;}
+  const v=ALL[idx];
+  const b=document.getElementById('valueBadge');
+  b.textContent=CL[v.cat]; b.className='vcbadge '+CB[v.cat];
+  document.getElementById('valueName').textContent=v.name;
+  document.getElementById('valueDesc').textContent=v.desc;
+  document.getElementById('currentIndex').textContent=idx+1;
+  document.getElementById('keptSoFar').textContent=kept.length+' kept';
+  document.getElementById('progressBar1').style.width=((idx+1)/ALL.length*100)+'%';
+}
+function skipValue(){idx++;showValue();}
+function keepValue(){kept.push(ALL[idx]);idx++;showValue();}
+
+function moveToStep2(){
+  setStep(1,2);
+  document.getElementById('keptCount').textContent=kept.length;
+  renderGrid('selectedValues2',kept,top10,10,'selectedCount2','finishBtn2',
+    (i,el)=>toggleSel(i,el,kept,top10,10,'selectedCount2','finishBtn2'));
+  scrollTop();
+}
+
+function goToStep3(){
+  setStep(2,3);
+  renderGrid('selectedValues3',top10,top3,3,'selectedCount3','finishBtn3',
+    (i,el)=>toggleSel(i,el,top10,top3,3,'selectedCount3','finishBtn3'));
+  scrollTop();
+}
+
+function goToStep4(){
+  setStep(3,4);
+  const c=document.getElementById('behaviorCards');
+  c.innerHTML='';
+  top3.forEach((v,i)=>{
+    beh[v.name]={outcome:'',b1:'',b2:'',b3:''};
+    const d=document.createElement('div');
+    d.className='behavior-card';
+    d.innerHTML=`
+      <div class="behavior-rank">Core value ${i+1} of 3</div>
+      <div class="behavior-value-name">${v.name}</div>
+      <div class="field-label" style="margin-top:20px;">Outcome statement</div>
+      <input class="field-input" placeholder='e.g. "Do the right thing in all situations"' oninput="beh['${v.name}'].outcome=this.value">
+      <div class="field-label">Concrete behaviors</div>
+      <div class="behaviors-wrap">
+        <input class="behavior-input" placeholder="Behavior 1 (e.g. Tell the truth)" oninput="beh['${v.name}'].b1=this.value">
+        <input class="behavior-input" placeholder="Behavior 2" oninput="beh['${v.name}'].b2=this.value">
+        <input class="behavior-input" placeholder="Behavior 3 (optional)" oninput="beh['${v.name}'].b3=this.value">
+      </div>`;
+    c.appendChild(d);
+  });
+  scrollTop();
+}
+
+function goToResults(){
+  setStep(4,5);
+  const cats={V:[],M:[],S:[],C:[],O:[]};
+  top10.forEach(v=>cats[v.cat].push(v.name));
+  const parts=[];
+  if(cats.V.length) parts.push(`Your core values are <strong>${cats.V.join(', ')}</strong>`);
+  if(cats.M.length) parts.push(`what drives you is <strong>${cats.M.join(', ')}</strong>`);
+  if(cats.S.length) parts.push(`the states you seek are <strong>${cats.S.join(', ')}</strong>`);
+  if(cats.C.length) parts.push(`you want to embody <strong>${cats.C.join(', ')}</strong>`);
+  if(cats.O.length) parts.push(`the outcomes you want to create include <strong>${cats.O.join(', ')}</strong>`);
+  const dom=Object.entries({V:cats.V.length,M:cats.M.length,S:cats.S.length,C:cats.C.length,O:cats.O.length})
+    .sort((a,b)=>b[1]-a[1])[0][0];
+  document.getElementById('analysisBlock').innerHTML=`
+    <div class="analysis-eyebrow">Your values profile</div>
+    <div class="analysis-text" style="margin-bottom:16px;">${parts.join('. ')}.</div>
+    <div class="analysis-text" style="font-style:italic;opacity:0.8;">${DOMINANT_NOTES[dom]}</div>`;
+  document.getElementById('alsoTags').innerHTML=top10.slice(3).map(v=>
+    `<div class="also-tag">${v.name}<span class="tag-cat">${CL[v.cat]}</span></div>`).join('');
+  document.getElementById('charterItems').innerHTML=top3.map((v,i)=>{
+    const b=beh[v.name]||{};
+    const bl=[b.b1,b.b2,b.b3].filter(x=>x).map(x=>`<div class="charter-behavior">${x}</div>`).join('');
+    return `<div class="charter-item">
+      <div class="charter-rank">Core value ${i+1}</div>
+      <div class="charter-name">${v.name}</div>
+      ${b.outcome?`<div class="charter-outcome-label">Outcome</div><div class="charter-outcome">${b.outcome}</div>`:''}
+      ${bl?`<div class="charter-behaviors-label">How I live this</div>${bl}`:''}
+    </div>`;}).join('');
+  scrollTop();
+}
+
+function renderGrid(cid,src,sel,max,cntId,btnId,toggleFn){
+  const c=document.getElementById(cid);c.innerHTML='';
+  src.forEach((v,i)=>{
+    const d=document.createElement('div');d.className='value-item';
+    const r=sel.findIndex(x=>x.name===v.name)+1;
+    if(r>0)d.classList.add('selected');
+    d.innerHTML=`<div class="value-item-name">${v.name}</div><div class="value-item-cat">${CL[v.cat]}</div>${r>0?`<div class="rank-badge">${r}</div>`:''}`;
+    d.onclick=()=>toggleFn(i,d);
+    c.appendChild(d);
+  });
+}
+
+function toggleSel(i,el,src,sel,max,cntId,btnId){
+  const v=src[i];
+  const ex=sel.findIndex(x=>x.name===v.name);
+  if(ex>=0){
+    sel.splice(ex,1);el.classList.remove('selected');el.querySelector('.rank-badge')?.remove();
+    rerankGrid(el.parentElement,src,sel);
+  } else if(sel.length<max){
+    sel.push(v);el.classList.add('selected');
+    const b=document.createElement('div');b.className='rank-badge';b.textContent=sel.length;el.appendChild(b);
+  }
+  document.getElementById(cntId).textContent=sel.length;
+  document.getElementById(btnId).style.display=sel.length===max?'block':'none';
+}
+
+function rerankGrid(container,src,sel){
+  container.querySelectorAll('.value-item.selected').forEach(el=>{
+    const name=el.querySelector('.value-item-name').textContent;
+    const r=sel.findIndex(v=>v.name===name)+1;
+    const b=el.querySelector('.rank-badge');if(b)b.textContent=r;
+  });
+}
+
+function setStep(f,t){
+  document.getElementById(`step${f}`).classList.remove('active');
+  document.getElementById(`step${t}`).classList.add('active');
+  document.getElementById(`dot${f}`).classList.remove('active');
+  document.getElementById(`dot${f}`).classList.add('completed');
+  document.getElementById(`dot${t}`).classList.add('active');
+}
+function scrollTop(){setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);}
+
+function downloadCSV(){
+  let csv='VALUES CLARITY RESULTS\n\nYOUR TOP 3 VALUES CHARTER\nRank,Value,Category,Outcome Statement,Behavior 1,Behavior 2,Behavior 3\n';
+  top3.forEach((v,i)=>{const b=beh[v.name]||{};csv+=`${i+1},"${v.name}","${CL[v.cat]}","${b.outcome||''}","${b.b1||''}","${b.b2||''}","${b.b3||''}"\n`;});
+  csv+='\nALSO IMPORTANT (ranks 4-10)\nRank,Value,Category\n';
+  top10.slice(3).forEach((v,i)=>{csv+=`${i+4},"${v.name}","${CL[v.cat]}"\n`;});
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='values-clarity.csv';a.click();
+}
+
+function restart(){
+  idx=0;kept=[];top10=[];top3=[];beh={};
+  document.querySelectorAll('.step-dot').forEach(d=>{d.classList.remove('active','completed');});
+  document.querySelectorAll('.step-content').forEach(s=>s.classList.remove('active'));
+  document.getElementById('dot1').classList.add('active');
+  document.getElementById('step1').classList.add('active');
+  showValue();scrollTop();
+}
+init();
+</script>
+</body>
+</html>

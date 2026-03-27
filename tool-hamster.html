@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hamster Wheel Assessment · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --cream: #f9f6f1;
+  --cream2: #ffffff;
+  --ink: #0f1923;
+  --ink-soft: rgba(15,25,35,0.65);
+  --ink-faint: rgba(15,25,35,0.1);
+  --blue-dark: #1b3a5c;
+  --blue-mid: #2e6e9e;
+  --blue-light: #d6e8f5;
+  --gold: #c8a45a;
+  --jump-orange: #e84a0c;
+  --border: rgba(15,25,35,0.1);
+}
+
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:0.5px;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+/* HERO */
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#eef4fb 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(232,74,12,0.06) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--jump-orange);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--jump-orange);font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--jump-orange);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:520px;line-height:1.75;}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:60px 60px 100px;}
+
+/* SECTION HEADER */
+.section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;margin-top:48px;}
+.section-label-line{width:20px;height:1.5px;background:var(--blue-mid);}
+.section-label span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+
+/* CATEGORY */
+.category{margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.category:last-of-type{border-bottom:none;}
+.category-title{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:600;color:var(--blue-dark);margin-bottom:28px;padding-bottom:12px;border-bottom:1px solid var(--blue-light);}
+
+/* QUESTION */
+.question{margin-bottom:32px;}
+.question-text{font-size:15px;color:var(--ink);margin-bottom:14px;font-weight:300;line-height:1.5;}
+
+/* SLIDER */
+.slider-container{padding:0 4px;}
+.slider{width:100%;height:2px;border-radius:1px;background:var(--border);outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue-dark);cursor:pointer;transition:transform 0.2s,background 0.2s;}
+.slider::-webkit-slider-thumb:hover{transform:scale(1.2);background:var(--blue-mid);}
+.slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue-dark);cursor:pointer;border:none;transition:transform 0.2s;}
+.slider-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--ink-soft);letter-spacing:0.5px;}
+.value-display{text-align:center;margin-top:6px;font-size:12px;color:var(--blue-mid);font-weight:500;letter-spacing:1px;}
+
+/* BUTTON */
+.btn{background:var(--blue-dark);color:var(--cream);border:none;padding:16px 48px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:600;font-family:"Outfit",sans-serif;transition:all 0.2s;display:block;margin:40px auto 0;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn-secondary{background:transparent;color:var(--blue-dark);border:1.5px solid var(--blue-dark);margin-top:16px;}
+.btn-secondary:hover{background:var(--blue-dark);color:var(--cream);}
+
+/* RESULTS */
+#results{display:none;}
+.score-card{background:var(--blue-dark);padding:52px 40px;border-radius:4px;text-align:center;margin-bottom:40px;}
+.total-score{font-family:"Cormorant Garamond",serif;font-size:6rem;font-weight:300;color:var(--cream);line-height:1;margin-bottom:6px;}
+.score-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(249,246,241,0.5);margin-bottom:20px;}
+.interpretation{font-size:1.1rem;color:var(--cream);font-weight:300;line-height:1.65;max-width:500px;margin:0 auto;}
+
+.category-scores{margin-bottom:40px;}
+.category-score{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--blue-mid);margin-bottom:8px;border-radius:2px;}
+.category-name{font-size:13px;font-weight:400;color:var(--ink);}
+.category-bar-wrap{flex:1;margin:0 20px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.category-bar{height:100%;background:var(--blue-mid);border-radius:2px;transition:width 0.6s ease;}
+.category-value{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:600;color:var(--blue-dark);min-width:36px;text-align:right;}
+
+.radar-container{margin-bottom:40px;text-align:center;background:var(--cream2);border:1px solid var(--border);padding:40px;border-radius:4px;}
+.radar-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);margin-bottom:28px;font-weight:500;}
+
+canvas{max-width:100%;height:auto;}
+
+/* DOWNLOAD */
+.export-note{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:12px;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 50px;}
+  .main{padding:40px 24px 80px;}
+  .score-card{padding:36px 24px;}
+  .total-score{font-size:4rem;}
+  .category-score{flex-wrap:wrap;gap:8px;}
+  .category-bar-wrap{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span>JUMP · Self-assessment</span>
+  </div>
+  <h1 class="hero-title"><em>Hamster Wheel</em><br>Assessment</h1>
+  <p class="hero-sub">33 questions across 11 areas of your life. Rate each statement from 0 (not at all true) to 10 (completely true). Honest answers give the most useful results.</p>
+</div>
+
+<div class="main">
+
+  <div id="questionnaire">
+
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>11 categories · 3 questions each</span>
+    </div>
+
+    <!-- 1. Time Autonomy -->
+    <div class="category">
+      <div class="category-title">Time Autonomy</div>
+      <div class="question">
+        <div class="question-text">I decide how I use my time.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="zeitautonomie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I have enough time for what really matters.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="zeitautonomie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">My calendar belongs to me.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="zeitautonomie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Energy Balance -->
+    <div class="category">
+      <div class="category-title">Energy Balance</div>
+      <div class="question">
+        <div class="question-text">I start the day with energy.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="energiebalance">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">My daily life gives me more energy than it takes.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="energiebalance">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">In the evenings I still have energy for myself and my family.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="energiebalance">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Meaning & Impact -->
+    <div class="category">
+      <div class="category-title">Meaning, Fulfilment &amp; Impact</div>
+      <div class="question">
+        <div class="question-text">My work is meaningful.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sinn">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I use my real strengths.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sinn">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">My work makes a difference.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sinn">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Physical Health -->
+    <div class="category">
+      <div class="category-title">Physical Health</div>
+      <div class="question">
+        <div class="question-text">I sleep well and enough.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="gesundheit">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I exercise regularly.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="gesundheit">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I feel physically fit.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="gesundheit">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Emotional Wellbeing -->
+    <div class="category">
+      <div class="category-title">Emotional Wellbeing</div>
+      <div class="question">
+        <div class="question-text">I feel calm inside.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="emotional">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I am satisfied with my life.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="emotional">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I feel emotionally balanced.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="emotional">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Social Connection -->
+    <div class="category">
+      <div class="category-title">Social Connection</div>
+      <div class="question">
+        <div class="question-text">My important relationships are healthy.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sozial">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I have enough time for family and friends.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sozial">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I feel connected.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="sozial">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Self-Control & Balance -->
+    <div class="category">
+      <div class="category-title">Self-Control &amp; Balance</div>
+      <div class="question">
+        <div class="question-text">I manage my phone and social media use.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="kontrolle">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I use healthy ways to relax.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="kontrolle">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I maintain healthy boundaries.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="kontrolle">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Financial Security -->
+    <div class="category">
+      <div class="category-title">Financial Security</div>
+      <div class="question">
+        <div class="question-text">I have a financial buffer.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="finanzen">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">My expenses are under control.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="finanzen">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I do not feel financially trapped.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="finanzen">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Career Perspective -->
+    <div class="category">
+      <div class="category-title">Career Perspective</div>
+      <div class="question">
+        <div class="question-text">I see a positive professional future.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="karriere">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I am developing and growing.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="karriere">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I have realistic career options.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="karriere">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Work-Life Integration -->
+    <div class="category">
+      <div class="category-title">Work-Life Integration</div>
+      <div class="question">
+        <div class="question-text">Work and personal life fit together well.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="worklife">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I do not feel torn between different demands.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="worklife">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">Responsibilities are distributed fairly.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="worklife">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. Trust & Spirituality -->
+    <div class="category">
+      <div class="category-title">Trust &amp; Spirituality</div>
+      <div class="question">
+        <div class="question-text">I trust the people close to me — family and friends are a source of support, not stress.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="trust">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I trust the people I work with — my team, peers and leadership act with integrity.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="trust">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I feel connected to something larger than my daily concerns — nature, a higher purpose, or a sense of meaning beyond immediate goals.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="trust">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculateResults()">Show my results</button>
+
+  </div><!-- end questionnaire -->
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="score-card">
+      <div class="total-score" id="totalScore">0.0</div>
+      <div class="score-label">Overall score · out of 10</div>
+      <div class="interpretation" id="interpretation"></div>
+    </div>
+
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Results by category</span>
+    </div>
+
+    <div class="category-scores" id="categoryScores"></div>
+
+    <div class="radar-container">
+      <div class="radar-title">Your Hamster Wheel Profile</div>
+      <canvas id="radarChart" width="440" height="440"></canvas>
+    </div>
+
+    <button class="btn" onclick="downloadCSV()">Download results as CSV</button>
+    <button class="btn btn-secondary" onclick="restart()">Start again</button>
+    <p class="export-note">Want to explore what's holding you back? <a href="teamworx_website.html#contact" style="color:var(--blue-mid);">Book a free JUMP conversation.</a></p>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+document.querySelectorAll('.slider').forEach(slider => {
+  slider.addEventListener('input', function() {
+    this.parentElement.querySelector('.value-display').textContent = this.value;
+  });
+});
+
+const categoryMeta = {
+  zeitautonomie: 'Time Autonomy',
+  energiebalance: 'Energy Balance',
+  sinn: 'Meaning & Impact',
+  gesundheit: 'Physical Health',
+  emotional: 'Emotional Wellbeing',
+  sozial: 'Social Connection',
+  kontrolle: 'Self-Control & Balance',
+  finanzen: 'Financial Security',
+  karriere: 'Career Perspective',
+  worklife: 'Work-Life Integration',
+  trust: 'Trust & Spirituality'
+};
+
+function calculateResults() {
+  const categories = {};
+  Object.keys(categoryMeta).forEach(k => { categories[k] = []; });
+
+  document.querySelectorAll('.slider').forEach(slider => {
+    categories[slider.dataset.category].push(parseInt(slider.value));
+  });
+
+  let total = 0;
+  const averages = Object.keys(categories).map(key => {
+    const scores = categories[key];
+    const avg = scores.reduce((a,b) => a+b, 0) / scores.length;
+    total += avg;
+    return { key, name: categoryMeta[key], score: avg };
+  });
+  total = total / averages.length;
+
+  document.getElementById('totalScore').textContent = total.toFixed(1);
+  document.getElementById('interpretation').textContent = getInterpretation(total);
+
+  const sorted = [...averages].sort((a,b) => a.score - b.score);
+  document.getElementById('categoryScores').innerHTML = sorted.map(cat => `
+    <div class="category-score">
+      <div class="category-name">${cat.name}</div>
+      <div class="category-bar-wrap"><div class="category-bar" style="width:${cat.score * 10}%"></div></div>
+      <div class="category-value">${cat.score.toFixed(1)}</div>
+    </div>
+  `).join('');
+
+  drawRadarChart(averages);
+
+  document.getElementById('questionnaire').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+
+  // store for CSV
+  window._results = { total, averages };
+}
+
+function getInterpretation(score) {
+  if (score < 3) return 'You are deep in the hamster wheel. The signals are clear — this is a moment to stop and take stock. Things need to change.';
+  if (score < 5) return 'You are in the hamster wheel. Some areas are working, but the overall picture points to real strain. It may be time to make a move.';
+  if (score < 7) return 'You are in the grey zone — some things are working, many are not. There is meaningful room to improve your situation.';
+  return 'You are largely outside the hamster wheel. You live with a good degree of self-determination. Keep building on what works.';
+}
+
+function drawRadarChart(data) {
+  const canvas = document.getElementById('radarChart');
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const r = Math.min(cx, cy) - 80;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(15,25,35,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 5; i++) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, (r/5)*i, 0, 2*Math.PI);
+    ctx.stroke();
+  }
+
+  const step = (2*Math.PI) / data.length;
+
+  // Axes
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(15,25,35,0.08)';
+    ctx.stroke();
+
+    // Labels
+    const lr = r + 44;
+    const lx = cx + lr * Math.cos(angle);
+    const ly = cy + lr * Math.sin(angle);
+    ctx.fillStyle = 'rgba(15,25,35,0.55)';
+    ctx.font = '11px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const words = item.name.split(' ');
+    if (words.length > 2) {
+      ctx.fillText(words.slice(0,2).join(' '), lx, ly - 7);
+      ctx.fillText(words.slice(2).join(' '), lx, ly + 7);
+    } else {
+      ctx.fillText(item.name, lx, ly);
+    }
+  });
+
+  // Data polygon
+  ctx.beginPath();
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    const d = (item.score / 10) * r;
+    const x = cx + d * Math.cos(angle);
+    const y = cy + d * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(27,58,92,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#1b3a5c';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Data points
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    const d = (item.score / 10) * r;
+    ctx.beginPath();
+    ctx.arc(cx + d*Math.cos(angle), cy + d*Math.sin(angle), 4, 0, 2*Math.PI);
+    ctx.fillStyle = '#1b3a5c';
+    ctx.fill();
+  });
+}
+
+function downloadCSV() {
+  const { total, averages } = window._results;
+  let csv = 'Category,Score\n';
+  averages.forEach(c => { csv += `${c.name},${c.score.toFixed(1)}\n`; });
+  csv += `\nOverall Score,${total.toFixed(1)}\n`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hamster-wheel-assessment.csv';
+  a.click();
+}
+
+function restart() {
+  document.querySelectorAll('.slider').forEach(s => {
+    s.value = 5;
+    s.parentElement.querySelector('.value-display').textContent = '5';
+  });
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('questionnaire').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

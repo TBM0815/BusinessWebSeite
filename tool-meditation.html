@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meditation Timer · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#f9f6f1;--cream2:#ffffff;--ink:#0f1923;--ink-soft:rgba(15,25,35,0.65);
+  --blue-dark:#1b3a5c;--blue-mid:#2e6e9e;--gold:#c8a45a;--border:rgba(15,25,35,0.1);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#eef4fb 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(200,164,90,0.07) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--gold);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#7a5c20;font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:480px;line-height:1.75;}
+
+.main{max-width:580px;margin:0 auto;padding:60px 60px 100px;}
+
+/* INSTRUCTIONS */
+.intro-box{background:var(--cream2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:24px 28px;margin-bottom:40px;border-radius:2px;}
+.intro-box h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#7a5c20;font-weight:600;margin-bottom:14px;}
+.intro-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;}
+.intro-step:last-child{margin-bottom:0;}
+.step-num{font-family:"Cormorant Garamond",serif;font-size:1.1rem;font-weight:600;color:var(--gold);min-width:18px;margin-top:1px;}
+.step-text{font-size:13px;color:var(--ink-soft);line-height:1.65;}
+.step-text strong{color:var(--ink);}
+.gong-note{font-size:12px;color:var(--blue-mid);margin-top:14px;padding-top:14px;border-top:1px solid var(--border);letter-spacing:0.3px;}
+
+/* DURATION SELECTOR */
+.duration-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin-bottom:12px;text-align:center;}
+.time-buttons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
+.btn-time{background:var(--cream2);border:1.5px solid var(--border);color:var(--ink-soft);padding:10px 20px;border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:1px;font-family:"Outfit",sans-serif;font-weight:500;transition:all 0.2s;}
+.btn-time:hover{border-color:var(--blue-mid);color:var(--blue-dark);}
+.btn-time.active{background:var(--blue-dark);border-color:var(--blue-dark);color:var(--cream);}
+
+/* TIMER */
+.timer-wrap{text-align:center;margin-bottom:36px;}
+.timer-ring{position:relative;width:220px;height:220px;margin:0 auto 32px;}
+.timer-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:3;}
+.ring-progress{fill:none;stroke:var(--blue-dark);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1s linear;}
+.timer-display{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:"Cormorant Garamond",serif;font-size:3.2rem;font-weight:300;color:var(--ink);letter-spacing:3px;line-height:1;}
+.timer-status{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-soft);margin-top:8px;}
+
+/* CONTROLS */
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn{padding:14px 32px;border:none;border-radius:2px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;cursor:pointer;font-family:"Outfit",sans-serif;transition:all 0.2s;}
+.btn-start{background:var(--blue-dark);color:var(--cream);}
+.btn-start:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn-pause{background:var(--gold);color:var(--ink);}
+.btn-pause:hover{opacity:0.85;transform:translateY(-1px);}
+.btn-reset{background:transparent;color:var(--ink-soft);border:1.5px solid var(--border);}
+.btn-reset:hover{border-color:var(--ink-soft);color:var(--ink);}
+
+/* WAKE LOCK STATUS */
+.wakelock-note{text-align:center;margin-top:20px;font-size:11px;color:var(--ink-soft);letter-spacing:0.5px;}
+.wakelock-note.active{color:var(--blue-mid);}
+
+/* COMPLETION */
+.completion{display:none;text-align:center;padding:36px 28px;background:var(--cream2);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:2px;margin-top:32px;}
+.completion.show{display:block;animation:fadeIn 0.5s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.completion-title{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.completion-sub{font-size:14px;color:var(--ink-soft);line-height:1.7;}
+
+/* Hidden wake lock video */
+#wakeLockVideo{position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 50px;}
+  .main{padding:40px 24px 80px;}
+  .timer-display{font-size:2.6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- Hidden video for wake lock fallback -->
+<video id="wakeLockVideo" loop muted playsinline>
+  <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAA" type="video/mp4">
+</video>
+
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow"><div class="eyebrow-line"></div><span>JUMP · Recovery</span></div>
+  <h1 class="hero-title"><em>Meditation</em> Timer</h1>
+  <p class="hero-sub">Sometimes the most productive thing you can do is stop. A simple timer to give your mind the space it needs to reset.</p>
+</div>
+
+<div class="main">
+
+  <div class="intro-box">
+    <h3>Instructions</h3>
+    <div class="intro-step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Sit comfortably</strong> — back straight, shoulders relaxed</div>
+    </div>
+    <div class="intro-step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Close your eyes</strong> and breathe deeply through your nose</div>
+    </div>
+    <div class="intro-step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Focus on your breath</strong> — in and out, naturally</div>
+    </div>
+    <div class="intro-step">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>When thoughts arise</strong> — let them pass like clouds, gently return to your breath</div>
+    </div>
+    <div class="gong-note">A gong will gently bring you back at the end.</div>
+  </div>
+
+  <div class="duration-label">Choose duration</div>
+  <div class="time-buttons">
+    <button class="btn-time" onclick="setTime(5,this)">5 min</button>
+    <button class="btn-time" onclick="setTime(10,this)">10 min</button>
+    <button class="btn-time" onclick="setTime(15,this)">15 min</button>
+    <button class="btn-time active" onclick="setTime(20,this)">20 min</button>
+    <button class="btn-time" onclick="setTime(30,this)">30 min</button>
+  </div>
+
+  <div class="timer-wrap">
+    <div class="timer-ring">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle class="ring-bg" cx="110" cy="110" r="100"/>
+        <circle class="ring-progress" id="ringProgress" cx="110" cy="110" r="100"
+          stroke-dasharray="628" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-display" id="timerDisplay">20:00</div>
+    </div>
+    <div class="timer-status" id="timerStatus">Ready</div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="btnStart" onclick="startTimer()">Start</button>
+    <button class="btn btn-pause" id="btnPause" onclick="pauseTimer()" style="display:none;">Pause</button>
+    <button class="btn btn-reset" id="btnReset" onclick="resetTimer()" style="display:none;">Reset</button>
+  </div>
+
+  <div class="wakelock-note" id="wakeLockNote"></div>
+
+  <div class="completion" id="completionMessage">
+    <div class="completion-title">Well done</div>
+    <div class="completion-sub">You have completed your meditation.<br>Take a moment to slowly come back.</div>
+  </div>
+
+</div>
+
+<script>
+let totalSeconds = 20 * 60;
+let remainingSeconds = totalSeconds;
+let timerInterval = null;
+let isRunning = false;
+let wakeLock = null;
+const CIRCUMFERENCE = 2 * Math.PI * 100; // 628
+
+// ── WAKE LOCK ──────────────────────────────────────────────────────────────
+async function requestWakeLock() {
+  // Try native Wake Lock API first
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      setWakeLockNote('Screen will stay on during meditation', true);
+      wakeLock.addEventListener('release', () => {
+        setWakeLockNote('');
+        wakeLock = null;
+      });
+      return;
+    } catch(e) {
+      // Fall through to video fallback
+    }
+  }
+  // Fallback: play tiny hidden video to keep screen awake
+  const video = document.getElementById('wakeLockVideo');
+  try {
+    await video.play();
+    setWakeLockNote('Screen will stay on during meditation', true);
+  } catch(e) {
+    setWakeLockNote('');
+  }
+}
+
+async function releaseWakeLock() {
+  if (wakeLock) {
+    try { await wakeLock.release(); } catch(e) {}
+    wakeLock = null;
+  }
+  const video = document.getElementById('wakeLockVideo');
+  video.pause();
+  setWakeLockNote('');
+}
+
+function setWakeLockNote(msg, active=false) {
+  const el = document.getElementById('wakeLockNote');
+  el.textContent = msg;
+  el.className = 'wakelock-note' + (active ? ' active' : '');
+}
+
+// Re-acquire wake lock if page becomes visible again (e.g. after lock screen)
+document.addEventListener('visibilitychange', async () => {
+  if (isRunning && document.visibilityState === 'visible' && !wakeLock) {
+    await requestWakeLock();
+  }
+});
+
+// ── TIMER ──────────────────────────────────────────────────────────────────
+function setTime(minutes, btn) {
+  if (isRunning) return;
+  totalSeconds = minutes * 60;
+  remainingSeconds = totalSeconds;
+  updateDisplay();
+  updateRing(1);
+  document.querySelectorAll('.btn-time').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('completionMessage').classList.remove('show');
+  document.getElementById('timerStatus').textContent = 'Ready';
+}
+
+function updateDisplay() {
+  const m = Math.floor(remainingSeconds / 60);
+  const s = remainingSeconds % 60;
+  document.getElementById('timerDisplay').textContent =
+    `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function updateRing(fraction) {
+  const offset = CIRCUMFERENCE * (1 - fraction);
+  document.getElementById('ringProgress').style.strokeDashoffset = offset;
+}
+
+async function startTimer() {
+  if (isRunning) return;
+  isRunning = true;
+  document.getElementById('btnStart').style.display = 'none';
+  document.getElementById('btnPause').style.display = 'inline-block';
+  document.getElementById('btnReset').style.display = 'inline-block';
+  document.getElementById('completionMessage').classList.remove('show');
+  document.getElementById('timerStatus').textContent = 'Meditating...';
+  await requestWakeLock();
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    updateDisplay();
+    updateRing(remainingSeconds / totalSeconds);
+    if (remainingSeconds <= 0) completeTimer();
+  }, 1000);
+}
+
+async function pauseTimer() {
+  isRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btnStart').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('timerStatus').textContent = 'Paused';
+  await releaseWakeLock();
+}
+
+async function resetTimer() {
+  isRunning = false;
+  clearInterval(timerInterval);
+  remainingSeconds = totalSeconds;
+  updateDisplay();
+  updateRing(1);
+  document.getElementById('btnStart').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnReset').style.display = 'none';
+  document.getElementById('completionMessage').classList.remove('show');
+  document.getElementById('timerStatus').textContent = 'Ready';
+  await releaseWakeLock();
+}
+
+async function completeTimer() {
+  isRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btnStart').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnReset').style.display = 'none';
+  document.getElementById('timerStatus').textContent = 'Complete';
+  document.getElementById('completionMessage').classList.add('show');
+  await releaseWakeLock();
+  playGong();
+  remainingSeconds = totalSeconds;
+  setTimeout(() => { updateDisplay(); updateRing(1); }, 3000);
+}
+
+// ── GONG ───────────────────────────────────────────────────────────────────
+function playGong() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    // Three layered sine waves for a richer gong sound
+    [[196, 0.35], [294, 0.2], [392, 0.1]].forEach(([freq, gain]) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      g.gain.setValueAtTime(gain, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 4);
+      osc.connect(g);
+      g.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 4);
+    });
+  } catch(e) {}
+}
+
+// Init
+updateDisplay();
+updateRing(1);
+</script>
+</body>
+</html>
