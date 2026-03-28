@@ -113,6 +113,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
   .button-row{flex-direction:column;}
   .btn-outline{margin-left:0;}
 }
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{background:white;color:#0f1923;font-size:11pt;line-height:1.4;}
+  nav,.hero,.btn,.btn-outline,.button-row,.next-steps,.intro-box,.progress-wrap,.edit-list,.matrix-explainer,.matrix-list,#phase2-section,#phase3-section{display:none !important;}
+  #phase4-section{display:block !important;}
+  .result-header{background:#1b3a5c !important;color:white;padding:30px;margin-bottom:20px;page-break-inside:avoid;}
+  .result-eyebrow{color:#c8a45a !important;}
+  .top3-card{page-break-inside:avoid;margin-bottom:20px;border:1px solid #ddd;padding:20px;}
+  .all-activities-table{page-break-inside:avoid;margin-top:30px;}
+  .radar-canvas{max-width:400px;margin:20px auto;display:block;}
+  .dimension-breakdown{margin-top:15px;padding-top:15px;border-top:1px solid #ddd;}
+  .pdf-header{display:block !important;text-align:center;margin-bottom:30px;padding-bottom:15px;border-bottom:2px solid #1b3a5c;}
+  .pdf-title{font-family:"Cormorant Garamond",serif;font-size:18pt;font-weight:600;color:#1b3a5c;margin-bottom:5px;}
+  .pdf-subtitle{font-family:"Outfit",sans-serif;font-size:10pt;color:#666;}
+  .pdf-footer{display:block;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:9pt;color:#666;padding:10px;border-top:1px solid #ddd;}
+}
 </style>
 </head>
 <body>
@@ -215,6 +231,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
 
   <!-- PHASE 4: Results -->
   <div class="phase-section" id="phase4-section">
+    <div class="pdf-header" style="display:none;">
+      <div class="pdf-title">Intrinsic Motivation Finder</div>
+      <div class="pdf-subtitle">TeamworX · <span id="pdf-date"></span></div>
+    </div>
+    
     <div class="result-header">
       <div class="result-eyebrow">Your Results</div>
       <h2 class="result-title">Top 3 Intrinsically Motivating Activities</h2>
@@ -223,6 +244,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
 
     <div id="top3-container"></div>
 
+    <div class="all-activities-section" id="all-activities-section" style="display:none;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin:40px 0 20px;color:#1b3a5c;">All Activities (Ranked)</h3>
+      <table class="all-activities-table" style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f9f6f1;border-bottom:2px solid #1b3a5c;">
+            <th style="padding:12px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Rank</th>
+            <th style="padding:12px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Activity</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Autonomy</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Mastery</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Purpose</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Relatedness</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Progress</th>
+            <th style="padding:12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="all-activities-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="pdf-footer" style="display:none;">
+      teamworx.dk
+    </div>
+
     <div class="next-steps">
       <h3 class="next-title">What is next?</h3>
       <p class="next-text">You have identified what energizes you intrinsically. The next step is to reality-check these activities: Which ones are financially viable? Where do you already have competence? Which ones could become a career?</p>
@@ -230,7 +274,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
     </div>
 
     <div class="button-row">
-      <button class="btn" onclick="downloadCSV()">Download Full Report (CSV)</button>
+      <button class="btn" onclick="printPDF()">Download PDF</button>
       <button class="btn btn-outline" onclick="restart()">Start Over</button>
     </div>
   </div>
@@ -463,6 +507,11 @@ function renderTop3(scored) {
   const container = document.getElementById('top3-container');
   container.innerHTML = '';
   
+  // Set PDF date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
+  document.getElementById('pdf-date').textContent = dateStr;
+  
   const top3 = scored.slice(0, 3);
   
   // Combined Radar Chart Card
@@ -530,6 +579,26 @@ function renderTop3(scored) {
     `;
     
     container.appendChild(card);
+  });
+  
+  // Populate all activities table
+  const tbody = document.getElementById('all-activities-tbody');
+  tbody.innerHTML = '';
+  scored.forEach((item, idx) => {
+    const r = item.ratings;
+    const row = document.createElement('tr');
+    row.style.borderBottom = '1px solid #ddd';
+    row.innerHTML = `
+      <td style="padding:10px;font-weight:600;color:#1b3a5c;">${idx + 1}</td>
+      <td style="padding:10px;">${item.activity}</td>
+      <td style="padding:10px;text-align:center;">${r.autonomy}</td>
+      <td style="padding:10px;text-align:center;">${r.mastery}</td>
+      <td style="padding:10px;text-align:center;">${r.purpose}</td>
+      <td style="padding:10px;text-align:center;">${r.relatedness}</td>
+      <td style="padding:10px;text-align:center;">${r.progress}</td>
+      <td style="padding:10px;text-align:center;font-weight:600;color:#e84a0c;">${item.score}</td>
+    `;
+    tbody.appendChild(row);
   });
 }
 
@@ -617,29 +686,21 @@ function drawCombinedRadar(canvas, top3) {
   });
 }
 
-function downloadCSV() {
-  let csv = 'Activity,Autonomy,Mastery,Purpose,Relatedness,Progress,Total Score\n';
+function printPDF() {
+  // Show PDF header, footer, and all activities table
+  document.querySelector('.pdf-header').style.display = 'block';
+  document.querySelector('.pdf-footer').style.display = 'block';
+  document.getElementById('all-activities-section').style.display = 'block';
   
-  const scored = activities.map(activity => {
-    const r = ratings[activity];
-    const total = r.autonomy + r.mastery + r.purpose + r.relatedness + r.progress;
-    return {activity, ratings: r, score: total};
-  });
+  // Trigger print dialog
+  window.print();
   
-  scored.sort((a, b) => b.score - a.score);
-  
-  scored.forEach(item => {
-    const r = item.ratings;
-    csv += `"${item.activity}",${r.autonomy},${r.mastery},${r.purpose},${r.relatedness},${r.progress},${item.score}\n`;
-  });
-  
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'intrinsic-motivation-finder.csv';
-  a.click();
-  window.URL.revokeObjectURL(url);
+  // Hide PDF header, footer, and table again after print dialog closes
+  setTimeout(() => {
+    document.querySelector('.pdf-header').style.display = 'none';
+    document.querySelector('.pdf-footer').style.display = 'none';
+    document.getElementById('all-activities-section').style.display = 'none';
+  }, 1000);
 }
 
 function restart() {
