@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Imposter Syndrome Assessment · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --cream: #f9f6f1;
+  --cream2: #ffffff;
+  --ink: #0f1923;
+  --ink-soft: rgba(15,25,35,0.65);
+  --blue-dark: #1b3a5c;
+  --blue-mid: #2e6e9e;
+  --blue-light: #d6e8f5;
+  --gold: #c8a45a;
+  --jump-orange: #e84a0c;
+  --border: rgba(15,25,35,0.1);
+  --imposter-low: #2d6a4f;
+  --imposter-medium: #e07b00;
+  --imposter-high: #c1121f;
+  --imposter-intense: #7b0011;
+}
+
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:0.5px;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+@media (max-width: 768px) {
+  nav{padding:12px 20px;}
+  .nav-back{display:none;}
+  .hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer;}
+  .hamburger span{width:22px;height:2px;background:var(--blue-dark);transition:all 0.3s;}
+}
+
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#fff5f0 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(232,74,12,0.08) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--jump-orange);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--jump-orange);font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--jump-orange);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:520px;line-height:1.75;}
+
+.main{max-width:860px;margin:0 auto;padding:60px 60px 100px;}
+
+@media (max-width: 768px) {
+  .hero{padding:100px 20px 50px;}
+  .main{padding:40px 20px 80px;}
+}
+
+/* INFO BOX */
+.info-box{background:var(--blue-light);border:1px solid rgba(46,110,158,0.2);border-left:3px solid var(--blue-mid);padding:24px 28px;border-radius:2px;margin-bottom:40px;}
+.info-box h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-dark);font-weight:600;margin-bottom:12px;}
+.info-box p{font-size:13px;color:var(--blue-dark);line-height:1.75;margin-bottom:8px;}
+.info-box p:last-child{margin-bottom:0;}
+
+/* DISCLAIMER */
+.disclaimer{font-size:12px;color:var(--ink-soft);font-style:italic;padding:16px 20px;background:var(--cream2);border-left:2px solid var(--border);margin-bottom:40px;line-height:1.7;}
+
+/* SECTION HEADER */
+.section-label{display:flex;align-items:center;gap:12px;margin:44px 0 28px;}
+.section-label-line{width:20px;height:1.5px;background:var(--blue-mid);}
+.section-label span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+
+/* QUESTION */
+.question{margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.question:last-of-type{border-bottom:none;}
+.question-text{font-size:15px;color:var(--ink);margin-bottom:16px;font-weight:300;line-height:1.5;}
+
+/* OPTIONS */
+.options{display:flex;gap:8px;flex-wrap:wrap;}
+.option{flex:1;min-width:80px;}
+.option input[type="radio"]{display:none;}
+.option label{display:block;padding:11px 10px;background:var(--cream2);border:1.5px solid var(--border);border-radius:2px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:12px;color:var(--ink-soft);font-weight:400;}
+.option label:hover{border-color:var(--blue-mid);color:var(--blue-dark);}
+.option input[type="radio"]:checked + label{background:var(--blue-dark);color:var(--cream);border-color:var(--blue-dark);}
+
+@media (max-width: 768px) {
+  .options{flex-direction:column;}
+  .option{min-width:100%;}
+}
+
+/* PROGRESS */
+.progress-bar{height:2px;background:var(--border);margin-bottom:40px;border-radius:1px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--blue-mid);width:0%;transition:width 0.3s ease;border-radius:1px;}
+.progress-text{font-size:11px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;}
+
+/* BUTTON */
+.btn{background:var(--blue-dark);color:var(--cream);border:none;padding:16px 48px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:600;font-family:"Outfit",sans-serif;transition:all 0.2s;display:block;margin:40px auto 0;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn:disabled{background:rgba(15,25,35,0.15);cursor:not-allowed;transform:none;}
+.btn-secondary{background:transparent;color:var(--blue-dark);border:1.5px solid var(--blue-dark);margin-top:16px;}
+.btn-secondary:hover{background:var(--blue-dark);color:var(--cream);}
+
+/* RESULTS */
+#results{display:none;}
+
+.score-card{padding:52px 40px;border-radius:4px;text-align:center;margin-bottom:36px;}
+.score-card.level-few{background:#f0f7f4;border:1px solid rgba(45,106,79,0.2);}
+.score-card.level-moderate{background:#fff8e6;border:1px solid rgba(224,123,0,0.2);}
+.score-card.level-frequent{background:#fff0f0;border:1px solid rgba(193,18,31,0.2);}
+.score-card.level-intense{background:#1b0004;border:1px solid rgba(123,0,17,0.5);}
+
+.total-score{font-family:"Cormorant Garamond",serif;font-size:5rem;font-weight:600;line-height:1;margin-bottom:8px;}
+.score-card.level-few .total-score{color:var(--imposter-low);}
+.score-card.level-moderate .total-score{color:var(--imposter-medium);}
+.score-card.level-frequent .total-score{color:var(--imposter-high);}
+.score-card.level-intense .total-score{color:#fff;}
+
+.score-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px;}
+.score-card.level-intense .score-label{color:rgba(255,255,255,0.6);}
+
+.level-label{font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:16px;}
+.score-card.level-few .level-label{color:var(--imposter-low);}
+.score-card.level-moderate .level-label{color:var(--imposter-medium);}
+.score-card.level-frequent .level-label{color:var(--imposter-high);}
+.score-card.level-intense .level-label{color:#fff;}
+
+.interpretation{font-size:15px;line-height:1.7;max-width:520px;margin:0 auto;}
+.score-card.level-intense .interpretation{color:#fff;}
+
+.recommendations{background:var(--cream2);padding:32px;border-radius:2px;border:1px solid var(--border);margin-bottom:32px;}
+.recommendations h3{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);font-weight:600;margin-bottom:16px;}
+.recommendations p{font-size:14px;color:var(--ink);line-height:1.75;margin-bottom:12px;}
+.recommendations ul{margin-left:20px;margin-top:12px;}
+.recommendations li{font-size:14px;color:var(--ink);line-height:1.75;margin-bottom:8px;}
+.recommendations strong{font-weight:600;color:var(--blue-dark);}
+
+.insight-box{background:#fff5e6;border:1px solid #f0c040;border-left:3px solid var(--jump-orange);padding:24px 28px;border-radius:2px;margin-bottom:32px;}
+.insight-box h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--jump-orange);font-weight:600;margin-bottom:12px;}
+.insight-box p{font-size:13px;color:#7a5500;line-height:1.75;margin-bottom:8px;}
+.insight-box p:last-child{margin-bottom:0;}
+
+.cta-note{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:24px;font-style:italic;}
+.cta-note a{color:var(--jump-orange);text-decoration:none;font-weight:500;}
+.cta-note a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="teamworx_website.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span>Self-Assessment</span>
+  </div>
+  <h1 class="hero-title">Do you feel like an <em>imposter?</em></h1>
+  <p class="hero-sub">Based on the Clance Impostor Phenomenon Scale — understand if imposter feelings are holding you back from pursuing what you really want.</p>
+</div>
+
+<div class="main">
+
+  <div class="info-box">
+    <h3>What is Imposter Syndrome?</h3>
+    <p>Imposter syndrome is the persistent belief that your success is undeserved — that you've fooled people into thinking you're more competent than you really are, and sooner or later you'll be "found out."</p>
+    <p>It affects high achievers across all fields, and is especially common during career transitions, promotions, or when stepping into new roles.</p>
+  </div>
+
+  <div class="disclaimer">This assessment is based on the Clance Impostor Phenomenon Scale (CIPS), a scientifically validated measure. It is not a diagnostic tool. If imposter feelings are significantly impacting your life, consider speaking with a professional.</div>
+
+  <div id="questionnaire">
+
+    <div class="progress-text" id="progressText">0 of 20 questions answered</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>Answer honestly — there are no right or wrong responses</span>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I have often succeeded on a test or task even though I was afraid that I would not do well before I undertook the task.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q1" id="q1-1" value="1"><label for="q1-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-2" value="2"><label for="q1-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-3" value="3"><label for="q1-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-4" value="4"><label for="q1-4">Often</label></div>
+        <div class="option"><input type="radio" name="q1" id="q1-5" value="5"><label for="q1-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I can give the impression that I'm more competent than I really am.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q2" id="q2-1" value="1"><label for="q2-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-2" value="2"><label for="q2-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-3" value="3"><label for="q2-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-4" value="4"><label for="q2-4">Often</label></div>
+        <div class="option"><input type="radio" name="q2" id="q2-5" value="5"><label for="q2-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I avoid evaluations if possible and have a dread of others evaluating me.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q3" id="q3-1" value="1"><label for="q3-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-2" value="2"><label for="q3-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-3" value="3"><label for="q3-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-4" value="4"><label for="q3-4">Often</label></div>
+        <div class="option"><input type="radio" name="q3" id="q3-5" value="5"><label for="q3-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">When people praise me for something I've accomplished, I'm afraid I won't be able to live up to their expectations of me in the future.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q4" id="q4-1" value="1"><label for="q4-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-2" value="2"><label for="q4-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-3" value="3"><label for="q4-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-4" value="4"><label for="q4-4">Often</label></div>
+        <div class="option"><input type="radio" name="q4" id="q4-5" value="5"><label for="q4-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I sometimes think I obtained my present position or gained my present success because I happened to be in the right place at the right time or knew the right people.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q5" id="q5-1" value="1"><label for="q5-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-2" value="2"><label for="q5-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-3" value="3"><label for="q5-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-4" value="4"><label for="q5-4">Often</label></div>
+        <div class="option"><input type="radio" name="q5" id="q5-5" value="5"><label for="q5-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I'm afraid people important to me may find out that I'm not as capable as they think I am.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q6" id="q6-1" value="1"><label for="q6-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-2" value="2"><label for="q6-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-3" value="3"><label for="q6-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-4" value="4"><label for="q6-4">Often</label></div>
+        <div class="option"><input type="radio" name="q6" id="q6-5" value="5"><label for="q6-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I tend to remember the incidents in which I have not done my best more than those times I have done my best.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q7" id="q7-1" value="1"><label for="q7-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-2" value="2"><label for="q7-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-3" value="3"><label for="q7-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-4" value="4"><label for="q7-4">Often</label></div>
+        <div class="option"><input type="radio" name="q7" id="q7-5" value="5"><label for="q7-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I rarely do a project or task as well as I'd like to do it.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q8" id="q8-1" value="1"><label for="q8-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-2" value="2"><label for="q8-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-3" value="3"><label for="q8-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-4" value="4"><label for="q8-4">Often</label></div>
+        <div class="option"><input type="radio" name="q8" id="q8-5" value="5"><label for="q8-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Sometimes I feel or believe that my success in my life or in my job has been the result of some kind of error.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q9" id="q9-1" value="1"><label for="q9-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-2" value="2"><label for="q9-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-3" value="3"><label for="q9-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-4" value="4"><label for="q9-4">Often</label></div>
+        <div class="option"><input type="radio" name="q9" id="q9-5" value="5"><label for="q9-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">It is hard for me to accept compliments or praise about my intelligence or accomplishments.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q10" id="q10-1" value="1"><label for="q10-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-2" value="2"><label for="q10-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-3" value="3"><label for="q10-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-4" value="4"><label for="q10-4">Often</label></div>
+        <div class="option"><input type="radio" name="q10" id="q10-5" value="5"><label for="q10-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">At times, I feel my success has been due to some kind of luck.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q11" id="q11-1" value="1"><label for="q11-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-2" value="2"><label for="q11-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-3" value="3"><label for="q11-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-4" value="4"><label for="q11-4">Often</label></div>
+        <div class="option"><input type="radio" name="q11" id="q11-5" value="5"><label for="q11-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I am disappointed at times in my present accomplishments and think I should have accomplished much more.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q12" id="q12-1" value="1"><label for="q12-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-2" value="2"><label for="q12-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-3" value="3"><label for="q12-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-4" value="4"><label for="q12-4">Often</label></div>
+        <div class="option"><input type="radio" name="q12" id="q12-5" value="5"><label for="q12-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">Sometimes I am afraid others will discover how much knowledge or ability I really lack.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q13" id="q13-1" value="1"><label for="q13-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-2" value="2"><label for="q13-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-3" value="3"><label for="q13-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-4" value="4"><label for="q13-4">Often</label></div>
+        <div class="option"><input type="radio" name="q13" id="q13-5" value="5"><label for="q13-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I am often afraid that I may fail at a new assignment or undertaking even though I generally do well at what I attempt.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q14" id="q14-1" value="1"><label for="q14-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-2" value="2"><label for="q14-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-3" value="3"><label for="q14-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-4" value="4"><label for="q14-4">Often</label></div>
+        <div class="option"><input type="radio" name="q14" id="q14-5" value="5"><label for="q14-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">When I have succeeded at something and received recognition for my accomplishments, I have doubts that I can keep repeating that success.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q15" id="q15-1" value="1"><label for="q15-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-2" value="2"><label for="q15-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-3" value="3"><label for="q15-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-4" value="4"><label for="q15-4">Often</label></div>
+        <div class="option"><input type="radio" name="q15" id="q15-5" value="5"><label for="q15-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">If I receive a great deal of praise and recognition for something I've accomplished, I tend to discount the importance of what I've done.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q16" id="q16-1" value="1"><label for="q16-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-2" value="2"><label for="q16-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-3" value="3"><label for="q16-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-4" value="4"><label for="q16-4">Often</label></div>
+        <div class="option"><input type="radio" name="q16" id="q16-5" value="5"><label for="q16-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I often compare my ability to those around me and think they may be more intelligent than I am.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q17" id="q17-1" value="1"><label for="q17-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-2" value="2"><label for="q17-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-3" value="3"><label for="q17-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-4" value="4"><label for="q17-4">Often</label></div>
+        <div class="option"><input type="radio" name="q17" id="q17-5" value="5"><label for="q17-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I often worry about not succeeding with a project or examination, even though others around me have considerable confidence that I will do well.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q18" id="q18-1" value="1"><label for="q18-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-2" value="2"><label for="q18-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-3" value="3"><label for="q18-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-4" value="4"><label for="q18-4">Often</label></div>
+        <div class="option"><input type="radio" name="q18" id="q18-5" value="5"><label for="q18-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">If I am going to receive a promotion or gain recognition of some kind, I hesitate to tell others until it is an accomplished fact.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q19" id="q19-1" value="1"><label for="q19-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-2" value="2"><label for="q19-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-3" value="3"><label for="q19-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-4" value="4"><label for="q19-4">Often</label></div>
+        <div class="option"><input type="radio" name="q19" id="q19-5" value="5"><label for="q19-5">Very true</label></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">I feel bad and discouraged if I'm not "the best" or at least "very special" in situations that involve achievement.</div>
+      <div class="options">
+        <div class="option"><input type="radio" name="q20" id="q20-1" value="1"><label for="q20-1">Not at all true</label></div>
+        <div class="option"><input type="radio" name="q20" id="q20-2" value="2"><label for="q20-2">Rarely</label></div>
+        <div class="option"><input type="radio" name="q20" id="q20-3" value="3"><label for="q20-3">Sometimes</label></div>
+        <div class="option"><input type="radio" name="q20" id="q20-4" value="4"><label for="q20-4">Often</label></div>
+        <div class="option"><input type="radio" name="q20" id="q20-5" value="5"><label for="q20-5">Very true</label></div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculateResults()" id="submitBtn" disabled>Show my results</button>
+
+  </div><!-- end questionnaire -->
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="score-card" id="scoreCard">
+      <div class="total-score" id="totalScore">0</div>
+      <div class="score-label">Total score · out of 100</div>
+      <div class="level-label" id="levelLabel"></div>
+      <div class="interpretation" id="interpretation"></div>
+    </div>
+
+    <div class="recommendations" id="recommendations"></div>
+
+    <div class="insight-box">
+      <h4>What this means for JUMP</h4>
+      <p>Imposter feelings are one of the most common blockades that prevent people from pursuing what they really want. If your score is moderate or above, these feelings may be limiting your ability to take the leap you know you need to make.</p>
+      <p>JUMP is designed to help you dissolve these internal barriers — so you can act on your ambitions without being held back by the fear that you're not "enough."</p>
+    </div>
+
+    <button class="btn" onclick="downloadCSV()">Download results as CSV</button>
+    <button class="btn btn-secondary" onclick="restart()">Start again</button>
+    <p class="cta-note">Ready to work through these feelings? <a href="teamworx_website.html#contact">Book a free JUMP conversation</a> to explore what is possible.</p>
+
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 20;
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  }
+  document.getElementById('progressText').textContent = `${answered} of ${TOTAL} questions answered`;
+  document.getElementById('progressFill').style.width = `${(answered/TOTAL)*100}%`;
+  document.getElementById('submitBtn').disabled = answered < TOTAL;
+}
+
+document.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', updateProgress));
+
+function calculateResults() {
+  let total = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    total += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  }
+
+  document.getElementById('totalScore').textContent = total;
+
+  const card = document.getElementById('scoreCard');
+  let levelClass, levelLabel, interp, recs;
+
+  // CIPS scoring: 20-40 few, 41-60 moderate, 61-80 frequent, 81+ intense
+  if (total <= 40) {
+    levelClass = 'level-few';
+    levelLabel = 'Few imposter characteristics';
+    interp = 'Your results suggest that imposter feelings are not a significant issue for you. You generally recognize and accept your accomplishments without excessive self-doubt.';
+    recs = `<h3>Recommendations</h3>
+      <p>Even with low imposter feelings, staying aware helps:</p>
+      <ul>
+        <li>Keep acknowledging your achievements honestly</li>
+        <li>When you do feel doubt, remind yourself of your track record</li>
+        <li>Support others who struggle with imposter feelings — you can be a grounding voice</li>
+        <li>Stay curious about new challenges without letting doubt creep in</li>
+      </ul>`;
+  } else if (total <= 60) {
+    levelClass = 'level-moderate';
+    levelLabel = 'Moderate imposter experiences';
+    interp = 'Your results indicate moderate imposter feelings. You sometimes doubt your competence or feel that your success is undeserved, but these feelings do not dominate your experience.';
+    recs = `<h3>Recommendations</h3>
+      <p>These feelings are common and workable — here is how to address them:</p>
+      <ul>
+        <li><strong>Track your wins:</strong> Keep a record of accomplishments, positive feedback, and successful outcomes</li>
+        <li><strong>Challenge the narrative:</strong> When you feel like a fraud, ask "What evidence contradicts this belief?"</li>
+        <li><strong>Talk about it:</strong> Share your feelings with trusted colleagues or a coach — you will find you are not alone</li>
+        <li><strong>Reframe success:</strong> Practice attributing success to your skills and effort, not just luck or timing</li>
+        <li><strong>Accept compliments:</strong> When praised, simply say "thank you" instead of deflecting or downplaying</li>
+      </ul>`;
+  } else if (total <= 80) {
+    levelClass = 'level-frequent';
+    levelLabel = 'Frequent imposter feelings';
+    interp = 'Your results show frequent imposter feelings. You regularly doubt your abilities and worry about being "found out" as less competent than others believe. This is likely limiting your willingness to take risks or pursue opportunities.';
+    recs = `<h3>Recommendations</h3>
+      <p><strong>These feelings are holding you back. It is time to actively work on them.</strong></p>
+      <ul>
+        <li><strong>Work with a coach or therapist:</strong> Imposter syndrome at this level benefits from professional support</li>
+        <li><strong>Identify your triggers:</strong> What situations bring up these feelings most? New roles? Public recognition? Feedback?</li>
+        <li><strong>Separate feelings from facts:</strong> You feel incompetent — but what do your results actually show?</li>
+        <li><strong>Stop comparing:</strong> Your internal experience vs. others external appearance is an unfair comparison</li>
+        <li><strong>Practice self-compassion:</strong> Treat yourself the way you would treat a friend struggling with similar doubts</li>
+        <li><strong>Take action despite the fear:</strong> Apply for the role, share your idea, accept the promotion — imposter feelings shrink with evidence</li>
+      </ul>`;
+  } else {
+    levelClass = 'level-intense';
+    levelLabel = 'Intense imposter experiences';
+    interp = 'Your results indicate intense imposter feelings. You likely experience persistent, overwhelming self-doubt that significantly impacts your decisions, relationships, and well-being. These feelings may be preventing you from pursuing the career or life you want.';
+    recs = `<h3>Immediate recommendations</h3>
+      <p><strong>These feelings are severe and are likely limiting your life significantly. Professional support is strongly recommended.</strong></p>
+      <ul>
+        <li><strong>Seek professional help:</strong> A therapist or coach experienced with imposter syndrome can provide structured support</li>
+        <li><strong>Recognize this is a pattern, not reality:</strong> Your perception of yourself is distorted by this phenomenon</li>
+        <li><strong>Stop the comparison trap entirely:</strong> Comparing yourself to others is feeding the impostor narrative</li>
+        <li><strong>Build a "brag file":</strong> Collect every piece of evidence that contradicts the impostor story — emails, feedback, outcomes</li>
+        <li><strong>Name it when it happens:</strong> "This is imposter syndrome talking, not reality"</li>
+        <li><strong>Consider whether perfectionism is involved:</strong> Often intense imposter feelings are linked to impossible standards</li>
+        <li><strong>Take the leap anyway:</strong> Waiting until you "feel ready" means waiting forever — the feelings follow action, not the other way around</li>
+      </ul>`;
+  }
+
+  card.className = 'score-card ' + levelClass;
+  document.getElementById('levelLabel').textContent = levelLabel;
+  document.getElementById('interpretation').textContent = interp;
+  document.getElementById('recommendations').innerHTML = recs;
+
+  document.getElementById('questionnaire').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+}
+
+function downloadCSV() {
+  const score = parseInt(document.getElementById('totalScore').textContent);
+  const level = document.getElementById('levelLabel').textContent;
+  
+  let csv = 'IMPOSTER SYNDROME ASSESSMENT RESULTS\n\n';
+  csv += 'Based on Clance Impostor Phenomenon Scale (CIPS)\n\n';
+  csv += 'Your Score\n';
+  csv += 'Total Score (20-100),' + score + '\n';
+  csv += 'Level,"' + level + '"\n\n';
+  
+  csv += 'Score Interpretation\n';
+  csv += 'Score Range,Level\n';
+  csv += '20-40,Few imposter characteristics\n';
+  csv += '41-60,Moderate imposter experiences\n';
+  csv += '61-80,Frequent imposter feelings\n';
+  csv += '81-100,Intense imposter experiences\n\n';
+  
+  csv += 'Note: This assessment is based on the Clance Impostor Phenomenon Scale. Higher scores indicate more frequent and intense imposter feelings.\n';
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'imposter-syndrome-assessment.csv'; a.click();
+}
+
+function restart() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  updateProgress();
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('questionnaire').style.display = 'block';
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+}
+</script>
+
+</body>
+</html>
