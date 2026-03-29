@@ -8,10 +8,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
 
 @media print {
-  nav,.no-print{display:none!important;}
-  body{background:white;padding:20px;}
-  .hero{padding:20px 0 10px;border:none;background:white;}
-  .card{box-shadow:none;border:1px solid #ddd;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  
+  /* Hide UI elements */
+  nav,.no-print,.hero{display:none!important;}
+  
+  body{background:white;padding:0;font-size:12pt;line-height:1.4;}
+  .container{max-width:1000px;margin:0 auto;padding:20px;}
+  
+  /* PDF Header/Footer */
+  .pdf-header{display:block !important;text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1b3a5c;}
+  .pdf-title{font-family:"Cormorant Garamond",serif;font-size:20pt;font-weight:600;color:#1b3a5c;margin-bottom:5px;}
+  .pdf-subtitle{font-family:"Outfit",sans-serif;font-size:11pt;color:#666;}
+  .pdf-footer{display:block;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:10pt;color:#666;padding:10px;border-top:1px solid #ddd;}
+  
+  /* Keep 2-column grid */
+  .grid-2{display:grid !important;grid-template-columns:1fr 1fr !important;gap:24px !important;}
+  .options-grid{display:grid !important;grid-template-columns:1fr 1fr 1fr !important;gap:14px;}
+  .options-grid input{font-size:12pt !important;padding:10px !important;}
+  
+  /* Cards */
+  .card{page-break-inside:avoid;box-shadow:none !important;border:1px solid #ddd !important;padding:18px;margin-bottom:16px;}
+  .section-title{font-size:11pt;margin-bottom:12px;font-weight:600;color:#1b3a5c;}
+  
+  /* CRITICAL: Hide selects, show print values */
+  select{display:none !important;}
+  .print-value{display:inline-block !important;font-size:13pt;font-weight:600;color:#1b3a5c;text-align:center;width:100%;}
+  
+  /* Tables */
+  table{page-break-inside:avoid;width:100%;border-collapse:collapse;font-size:11pt;}
+  th{padding:10px 8px;font-size:10pt;background:#f5f5f5 !important;border:1px solid #ddd;font-weight:600;}
+  td{padding:10px 8px;border:1px solid #ddd;vertical-align:middle;}
+  td:first-child{text-align:left;}
+  td.center{text-align:center;}
+  
+  /* Text inputs in tables - show as plain text */
+  td input[type="text"]{border:none !important;background:transparent !important;font-size:10pt;padding:0;}
+  
+  /* Summary rows */
+  .total-row{background:#f8f8f8 !important;}
+  .total-row td{font-weight:600;border-top:2px solid #1b3a5c;}
+  .avg-score{font-weight:700;font-size:12pt;color:#1b3a5c;}
+  
+  .check-icon{font-size:14pt;}
+  .check-yes-icon{color:#2e6e9e;}
+  .check-no-icon{color:#c8a45a;}
+  
+  /* Winner */
+  .winner{page-break-inside:avoid;padding:24px;margin-bottom:16px;}
+  .winner-label{font-size:11pt;}
+  .winner-name{font-size:24pt;}
+  
+  /* Decision input */
+  .decision-input{font-size:14pt !important;padding:12px !important;border:1px solid #ddd !important;}
+  
+  .footer-note{page-break-before:avoid;font-size:10pt;margin-top:20px;}
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -124,6 +175,11 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
 
 <div class="container">
 
+  <div class="pdf-header" style="display:none;">
+    <div class="pdf-title">Decision Matrix</div>
+    <div class="pdf-subtitle">TeamworX · <span id="pdf-date"></span></div>
+  </div>
+
   <div class="instructions no-print">
     <strong>How to use:</strong> Fill in your three options, then rate each one across the three sections. The matrix calculates a total score and highlights the strongest option — but the final decision is always yours.
   </div>
@@ -158,9 +214,9 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
           <thead>
             <tr>
               <th>Value</th>
-              <th class="center">Opt 1</th>
-              <th class="center">Opt 2</th>
-              <th class="center">Opt 3</th>
+              <th class="center option-header" id="valHeader0">Opt 1</th>
+              <th class="center option-header" id="valHeader1">Opt 2</th>
+              <th class="center option-header" id="valHeader2">Opt 3</th>
             </tr>
           </thead>
           <tbody id="valuesTable"></tbody>
@@ -173,9 +229,9 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
           <thead>
             <tr>
               <th>Factor</th>
-              <th class="center">Opt 1</th>
-              <th class="center">Opt 2</th>
-              <th class="center">Opt 3</th>
+              <th class="center option-header" id="pracHeader0">Opt 1</th>
+              <th class="center option-header" id="pracHeader1">Opt 2</th>
+              <th class="center option-header" id="pracHeader2">Opt 3</th>
             </tr>
           </thead>
           <tbody id="practicalTable"></tbody>
@@ -191,9 +247,9 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
           <thead>
             <tr>
               <th>Criterion</th>
-              <th class="center">Opt 1</th>
-              <th class="center">Opt 2</th>
-              <th class="center">Opt 3</th>
+              <th class="center option-header" id="realHeader0">Opt 1</th>
+              <th class="center option-header" id="realHeader1">Opt 2</th>
+              <th class="center option-header" id="realHeader2">Opt 3</th>
             </tr>
           </thead>
           <tbody id="realityTable"></tbody>
@@ -206,9 +262,9 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
           <thead>
             <tr>
               <th>Category</th>
-              <th class="center">Opt 1</th>
-              <th class="center">Opt 2</th>
-              <th class="center">Opt 3</th>
+              <th class="center option-header" id="sumHeader0">Opt 1</th>
+              <th class="center option-header" id="sumHeader1">Opt 2</th>
+              <th class="center option-header" id="sumHeader2">Opt 3</th>
             </tr>
           </thead>
           <tbody>
@@ -263,7 +319,11 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
 
   <!-- ACTIONS -->
   <div class="btn-row no-print">
-    <button class="btn" onclick="window.print()">Save as PDF</button>
+    <button class="btn" onclick="printPDF()">Save as PDF</button>
+  </div>
+
+  <div class="pdf-footer" style="display:none;">
+    teamworx.dk
   </div>
 
   <div class="footer-note">JUMP Coaching Method · teamworx.dk</div>
@@ -274,6 +334,44 @@ select.check-no{background:var(--no);color:white;border-color:var(--no);}
 const valueRows    = ['','','','',''];
 const practicalRows = ['Financial impact','Risk (5 = low risk)','Work-Life Balance','Development & learning','Enjoyment factor',''];
 const realityRows  = ['Financially feasible?','Family on board?','Timing right?','Reversible if needed?',''];
+
+function printPDF() {
+  // Set PDF date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
+  document.getElementById('pdf-date').textContent = dateStr;
+  
+  // Show PDF header and footer
+  document.querySelector('.pdf-header').style.display = 'block';
+  document.querySelector('.pdf-footer').style.display = 'block';
+  
+  // Convert all SELECT elements to plain text for printing
+  const selects = document.querySelectorAll('select');
+  const selectData = [];
+  selects.forEach((sel, idx) => {
+    const value = sel.value || '–';
+    const span = document.createElement('span');
+    span.className = 'print-value';
+    span.textContent = value;
+    span.style.display = 'none'; // Hidden until print
+    selectData.push({select: sel, span: span, parent: sel.parentNode});
+    sel.parentNode.appendChild(span);
+  });
+  
+  // Trigger print dialog
+  window.print();
+  
+  // Cleanup: Remove print spans and restore UI
+  setTimeout(() => {
+    document.querySelector('.pdf-header').style.display = 'none';
+    document.querySelector('.pdf-footer').style.display = 'none';
+    selectData.forEach(data => {
+      if (data.span.parentNode) {
+        data.span.parentNode.removeChild(data.span);
+      }
+    });
+  }, 1000);
+}
 
 function ratingSelect(id, onChange) {
   return `<select id="${id}" onchange="${onChange}(this)"><option value="">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>`;
@@ -358,6 +456,15 @@ function getRealityStatus(optIdx) {
 }
 
 function updateAll() {
+  // Update all table headers with option names
+  for(let i=0;i<3;i++){
+    const optName = document.getElementById(`opt${i}`).value.trim() || `Opt ${i+1}`;
+    document.getElementById(`valHeader${i}`).textContent = optName;
+    document.getElementById(`pracHeader${i}`).textContent = optName;
+    document.getElementById(`realHeader${i}`).textContent = optName;
+    document.getElementById(`sumHeader${i}`).textContent = optName;
+  }
+  
   for(let i=0;i<3;i++){
     const va=calcAvg('valRate',valueRows.length,i);
     const pa=calcAvg('pracRate',practicalRows.length,i);
@@ -399,6 +506,9 @@ function updateAll() {
 }
 
 initTables();
+
+// Scroll to top on page load
+setTimeout(() => window.scrollTo(0, 0), 50);
 </script>
 </body>
 </html>
