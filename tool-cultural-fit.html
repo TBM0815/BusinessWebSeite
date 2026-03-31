@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultural Fit Assessment · JUMP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --cream: #f9f6f1;
+  --cream2: #ffffff;
+  --ink: #0f1923;
+  --ink-soft: rgba(15,25,35,0.65);
+  --blue-dark: #1b3a5c;
+  --blue-mid: #2e6e9e;
+  --blue-light: #d6e8f5;
+  --gold: #c8a45a;
+  --jump-orange: #e84a0c;
+  --border: rgba(15,25,35,0.1);
+}
+
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-weight:300;line-height:1.6;min-height:100vh;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(249,246,241,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:0.5px;}
+.nav-logo span{color:var(--blue-mid);}
+.nav-back{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);text-decoration:none;font-weight:500;border:1.5px solid var(--blue-dark);padding:7px 18px;border-radius:2px;transition:all 0.2s;}
+.nav-back:hover{background:var(--blue-dark);color:var(--cream);}
+
+/* HERO */
+.hero{padding:120px 60px 70px;background:linear-gradient(135deg,#f9f6f1 0%,#e8f4fb 60%,#f9f6f1 100%);position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero::before{content:"";position:absolute;top:-150px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(46,110,158,0.06) 0%,transparent 70%);}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.eyebrow-line{width:24px;height:1.5px;background:var(--blue-mid);}
+.hero-eyebrow span{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:600;line-height:1.05;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--blue-mid);}
+.hero-sub{font-size:0.95rem;color:var(--ink-soft);max-width:520px;line-height:1.75;margin-bottom:24px;}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:60px 60px 100px;}
+
+/* WELCOME SCREEN */
+#welcome{max-width:600px;margin:0 auto;}
+.welcome-intro{font-size:15px;line-height:1.7;margin-bottom:32px;color:var(--ink-soft);}
+.attribution{font-size:13px;color:var(--ink-soft);font-style:italic;margin-bottom:32px;padding:16px 20px;background:var(--blue-light);border-radius:2px;border-left:3px solid var(--blue-mid);}
+
+.input-group{margin-bottom:24px;}
+.input-group label{display:block;font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px;}
+.input-group select{width:100%;padding:14px 16px;font-size:15px;font-family:"Outfit",sans-serif;background:white;border:1px solid var(--border);border-radius:2px;color:var(--ink);cursor:pointer;}
+.input-group select:focus{outline:none;border-color:var(--blue-mid);}
+
+/* BUTTON */
+.btn{background:var(--blue-dark);color:var(--cream);border:none;padding:16px 48px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:600;font-family:"Outfit",sans-serif;transition:all 0.2s;display:block;margin:40px auto 0;width:100%;max-width:300px;}
+.btn:hover{background:var(--blue-mid);transform:translateY(-2px);}
+.btn:disabled{background:#ccc;cursor:not-allowed;transform:none;}
+
+/* PROGRESS */
+.progress-bar{background:var(--border);height:4px;border-radius:2px;margin-bottom:40px;overflow:hidden;}
+.progress-fill{background:var(--blue-mid);height:100%;transition:width 0.3s ease;border-radius:2px;}
+.progress-text{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:8px;letter-spacing:1px;}
+
+/* DIMENSION CARD */
+.dimension-card{background:white;border:1px solid var(--border);border-radius:4px;padding:40px;margin-bottom:40px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.dimension-number{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-mid);margin-bottom:12px;font-weight:600;}
+.dimension-title{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--ink);margin-bottom:16px;}
+.dimension-description{font-size:15px;line-height:1.7;color:var(--ink-soft);margin-bottom:24px;}
+.scenario-box{background:var(--blue-light);padding:20px 24px;border-radius:2px;margin-bottom:28px;border-left:3px solid var(--blue-mid);}
+.scenario-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dark);margin-bottom:8px;font-weight:600;}
+.scenario-text{font-size:14px;line-height:1.6;color:var(--ink);font-style:italic;}
+
+/* SLIDER */
+.slider-container{padding:0 4px;}
+.slider-question{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:16px;}
+.slider{width:100%;height:3px;border-radius:2px;background:linear-gradient(to right, var(--blue-light) 0%, var(--blue-mid) 50%, var(--blue-dark) 100%);outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;margin:20px 0;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue-dark);cursor:pointer;transition:transform 0.2s;}
+.slider::-webkit-slider-thumb:hover{transform:scale(1.2);}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--blue-dark);cursor:pointer;border:none;}
+.slider-labels{display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--ink-soft);}
+.slider-label-left{text-align:left;flex:1;}
+.slider-label-right{text-align:right;flex:1;}
+
+/* MINI GAME */
+#miniGame{max-width:700px;margin:0 auto;text-align:center;}
+.game-title{font-family:"Cormorant Garamond",serif;font-size:2rem;font-weight:600;margin-bottom:16px;color:var(--blue-dark);}
+.game-intro{font-size:15px;line-height:1.7;color:var(--ink-soft);margin-bottom:32px;}
+.flags-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px;}
+.flag-option{cursor:pointer;padding:16px;border:2px solid var(--border);border-radius:4px;transition:all 0.2s;background:white;}
+.flag-option:hover{border-color:var(--blue-mid);transform:scale(1.05);}
+.flag-option.selected{border-color:var(--blue-dark);background:var(--blue-light);}
+.flag-emoji{font-size:3rem;margin-bottom:8px;}
+.flag-name{font-size:12px;color:var(--ink);font-weight:500;}
+.game-instruction{font-size:13px;color:var(--ink-soft);margin-bottom:24px;}
+
+/* RESULTS */
+#results{display:none;}
+.archetype-card{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-mid) 100%);color:white;padding:48px;border-radius:4px;text-align:center;margin-bottom:40px;}
+.archetype-icon{font-size:4rem;margin-bottom:16px;}
+.archetype-name{font-family:"Cormorant Garamond",serif;font-size:2.5rem;font-weight:600;margin-bottom:16px;}
+.archetype-description{font-size:15px;line-height:1.8;opacity:0.9;max-width:600px;margin:0 auto 24px;}
+.archetype-matches{font-size:13px;opacity:0.8;margin-top:16px;}
+.archetype-matches strong{opacity:1;color:var(--gold);}
+
+.radar-container{background:white;border:1px solid var(--border);padding:40px;border-radius:4px;margin-bottom:40px;text-align:center;}
+.radar-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);margin-bottom:28px;font-weight:500;}
+canvas{max-width:100%;height:auto;}
+
+.gaps-section{margin-bottom:40px;}
+.section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.section-label-line{width:20px;height:1.5px;background:var(--blue-mid);}
+.section-label span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-mid);font-weight:500;}
+
+.gap-card{background:white;border-left:4px solid var(--jump-orange);padding:20px 24px;margin-bottom:12px;border-radius:2px;box-shadow:0 2px 4px rgba(0,0,0,0.04);}
+.gap-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.gap-scores{font-size:13px;color:var(--ink-soft);margin-bottom:4px;}
+.gap-difference{font-size:12px;color:var(--jump-orange);font-weight:500;}
+
+.tool-context{background:var(--blue-light);border-left:3px solid var(--blue-mid);padding:24px 28px;margin:40px 0;border-radius:2px;}
+.tool-context p{font-size:14px;line-height:1.7;color:var(--ink);margin-bottom:12px;}
+.tool-context p:last-child{margin-bottom:0;}
+.tool-context strong{font-weight:600;color:var(--blue-dark);}
+.tool-context ul{margin:12px 0;padding-left:20px;}
+.tool-context li{font-size:13px;line-height:1.6;margin-bottom:6px;}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:100px 24px 50px;}
+  .main{padding:40px 24px 80px;}
+  .dimension-card{padding:28px 20px;}
+  .flags-grid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">TeamworX <span>·</span> Tobias Münch</a>
+  <a href="tools.html" class="nav-back">← All Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span>Cultural Assessment</span>
+  </div>
+  <h1 class="hero-title">Cultural Fit <em>Assessment</em></h1>
+  <p class="hero-sub">Living abroad means navigating two cultures: yours and theirs. This tool helps you understand where they align — and where they clash.</p>
+</div>
+
+<div class="main">
+  
+  <!-- WELCOME -->
+  <div id="welcome">
+    <div class="welcome-intro">
+      <p>This assessment explores 10 cultural dimensions that shape how we work, communicate, and build relationships. You'll rate yourself first, then rate your host country based on your experience.</p>
+      <p style="margin-top:16px;">At the end, you'll see your cultural profile, discover your "cultural archetype," and understand where friction might arise.</p>
+    </div>
+    
+    <div class="attribution">
+      Based on cross-cultural research frameworks (Erin Meyer, Hofstede, GLOBE Study)
+    </div>
+    
+    <div class="input-group">
+      <label for="hostCountry">I currently live in:</label>
+      <select id="hostCountry">
+        <option value="">Select country...</option>
+        <option value="denmark">Denmark</option>
+        <option value="germany">Germany</option>
+        <option value="usa">United States</option>
+        <option value="uk">United Kingdom</option>
+        <option value="netherlands">Netherlands</option>
+        <option value="sweden">Sweden</option>
+        <option value="norway">Norway</option>
+        <option value="france">France</option>
+        <option value="spain">Spain</option>
+        <option value="italy">Italy</option>
+        <option value="japan">Japan</option>
+        <option value="china">China</option>
+        <option value="india">India</option>
+        <option value="brazil">Brazil</option>
+        <option value="australia">Australia</option>
+        <option value="canada">Canada</option>
+      </select>
+    </div>
+    
+    <div class="input-group">
+      <label for="originCountry">I originally come from:</label>
+      <select id="originCountry">
+        <option value="">Select country...</option>
+        <option value="denmark">Denmark</option>
+        <option value="germany">Germany</option>
+        <option value="usa">United States</option>
+        <option value="uk">United Kingdom</option>
+        <option value="netherlands">Netherlands</option>
+        <option value="sweden">Sweden</option>
+        <option value="norway">Norway</option>
+        <option value="france">France</option>
+        <option value="spain">Spain</option>
+        <option value="italy">Italy</option>
+        <option value="japan">Japan</option>
+        <option value="china">China</option>
+        <option value="india">India</option>
+        <option value="brazil">Brazil</option>
+        <option value="australia">Australia</option>
+        <option value="canada">Canada</option>
+      </select>
+    </div>
+    
+    <button class="btn" onclick="startAssessment()" id="startBtn" disabled>Start Assessment</button>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div id="phase1" style="display:none;">
+    <div class="progress-bar"><div class="progress-fill" id="progress1" style="width:0%"></div></div>
+    <div class="progress-text" id="progressText1">Dimension 1 of 10</div>
+    <div id="dimensionsContainer1"></div>
+  </div>
+
+  <!-- MINI GAME -->
+  <div id="miniGame" style="display:none;"></div>
+
+  <!-- PHASE 2 -->
+  <div id="phase2" style="display:none;">
+    <div class="progress-bar"><div class="progress-fill" id="progress2" style="width:0%"></div></div>
+    <div class="progress-text" id="progressText2">Dimension 1 of 10</div>
+    <div id="dimensionsContainer2"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results"></div>
+
+</div>
+
+<script>
+// CONFIGURATION
+let hostCountry = '';
+let originCountry = '';
+let selfScores = [];
+let hostScores = [];
+
+const countries = {
+  denmark: {name: 'Denmark', flag: '🇩🇰'},
+  germany: {name: 'Germany', flag: '🇩🇪'},
+  usa: {name: 'United States', flag: '🇺🇸'},
+  uk: {name: 'United Kingdom', flag: '🇬🇧'},
+  netherlands: {name: 'Netherlands', flag: '🇳🇱'},
+  sweden: {name: 'Sweden', flag: '🇸🇪'},
+  norway: {name: 'Norway', flag: '🇳🇴'},
+  france: {name: 'France', flag: '🇫🇷'},
+  spain: {name: 'Spain', flag: '🇪🇸'},
+  italy: {name: 'Italy', flag: '🇮🇹'},
+  japan: {name: 'Japan', flag: '🇯🇵'},
+  china: {name: 'China', flag: '🇨🇳'},
+  india: {name: 'India', flag: '🇮🇳'},
+  brazil: {name: 'Brazil', flag: '🇧🇷'},
+  australia: {name: 'Australia', flag: '🇦🇺'},
+  canada: {name: 'Canada', flag: '🇨🇦'}
+};
+
+const dimensions = [
+  {
+    id: 'hierarchy',
+    title: 'Hierarchy & Decision-Making',
+    description: 'In some cultures, teams are flat and everyone challenges ideas openly. In others, clear hierarchies guide decisions and respect for authority matters.',
+    scenario: 'Your boss proposes a plan you think won\'t work.',
+    labelLow: 'I\'d voice concerns openly in the meeting',
+    labelHigh: 'I\'d trust their judgment and follow it'
+  },
+  {
+    id: 'communication',
+    title: 'Communication & Feedback',
+    description: 'Some cultures value direct, explicit communication. Others prefer indirect, diplomatic language where reading between the lines is expected.',
+    scenario: 'A colleague delivers work that misses the mark.',
+    labelLow: 'I\'d tell them directly what needs fixing',
+    labelHigh: 'I\'d hint diplomatically and soften criticism'
+  },
+  {
+    id: 'task_relationship',
+    title: 'Task vs. Relationship',
+    description: 'In task-based cultures, you can work with anyone if they\'re competent. In relationship-based cultures, trust and connection come first.',
+    scenario: 'Starting a new project with someone you just met.',
+    labelLow: 'Let\'s get to work immediately',
+    labelHigh: 'Let\'s grab coffee and get to know each other first'
+  },
+  {
+    id: 'trust',
+    title: 'Trust Culture',
+    description: 'Some cultures give trust upfront until proven wrong. Others require track record and verification before trusting.',
+    scenario: 'A new colleague asks to lead an important task.',
+    labelLow: 'Sure, I trust them until proven otherwise',
+    labelHigh: 'They need to prove themselves first'
+  },
+  {
+    id: 'risk',
+    title: 'Risk & Uncertainty',
+    description: 'Some cultures embrace ambiguity and "let\'s try and see." Others value planning, structure, and minimizing uncertainty.',
+    scenario: 'Launching something new without all the details figured out.',
+    labelLow: 'Exciting! We\'ll figure it out as we go',
+    labelHigh: 'Uncomfortable without a clear plan'
+  },
+  {
+    id: 'gender',
+    title: 'Gender Equality',
+    description: 'Cultures vary in how traditional or egalitarian gender roles are in work and family life.',
+    scenario: 'A father taking 6 months parental leave.',
+    labelLow: 'Completely normal and expected',
+    labelHigh: 'Unusual, mothers typically take leave'
+  },
+  {
+    id: 'worklife',
+    title: 'Work-Life Integration',
+    description: 'Some cultures separate work and life strictly. Others see them as more integrated, with flexible boundaries.',
+    scenario: 'It\'s 6pm on a Tuesday. Your boss emails about tomorrow\'s meeting.',
+    labelLow: 'I respond tomorrow morning',
+    labelHigh: 'I respond immediately'
+  },
+  {
+    id: 'individualism',
+    title: 'Individualism vs. Collectivism',
+    description: 'Individualist cultures prioritize personal goals and opinions. Collectivist cultures prioritize group harmony and consensus.',
+    scenario: 'The team wants to go with option A. You prefer option B.',
+    labelLow: 'I voice my different opinion clearly',
+    labelHigh: 'I go with the group to maintain harmony'
+  },
+  {
+    id: 'time',
+    title: 'Time & Punctuality',
+    description: 'Some cultures treat time as precise and sacred. Others see it as flexible and approximate.',
+    scenario: 'A meeting is scheduled for 9:00am.',
+    labelLow: 'I arrive at 8:55',
+    labelHigh: 'I arrive around 9:05-9:10'
+  },
+  {
+    id: 'conflict',
+    title: 'Conflict & Debate',
+    description: 'Some cultures see debate and disagreement as healthy and productive. Others view confrontation as disrespectful.',
+    scenario: 'A colleague strongly disagrees with your idea in a meeting.',
+    labelLow: 'Great! Let\'s debate this openly',
+    labelHigh: 'Uncomfortable, let\'s discuss privately later'
+  }
+];
+
+// Enable start button when both countries selected
+document.getElementById('hostCountry').addEventListener('change', checkCountries);
+document.getElementById('originCountry').addEventListener('change', checkCountries);
+
+function checkCountries() {
+  const host = document.getElementById('hostCountry').value;
+  const origin = document.getElementById('originCountry').value;
+  document.getElementById('startBtn').disabled = !host || !origin;
+}
+
+function startAssessment() {
+  hostCountry = document.getElementById('hostCountry').value;
+  originCountry = document.getElementById('originCountry').value;
+  
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('phase1').style.display = 'block';
+  
+  renderPhase1();
+  setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+}
+
+let currentDimension1 = 0;
+
+function renderPhase1() {
+  const container = document.getElementById('dimensionsContainer1');
+  const dim = dimensions[currentDimension1];
+  
+  container.innerHTML = `
+    <div class="dimension-card">
+      <div class="dimension-number">Dimension ${currentDimension1 + 1} of 10</div>
+      <h2 class="dimension-title">${dim.title}</h2>
+      <p class="dimension-description">${dim.description}</p>
+      
+      <div class="scenario-box">
+        <div class="scenario-label">Scenario</div>
+        <div class="scenario-text">"${dim.scenario}"</div>
+      </div>
+      
+      <div class="slider-container">
+        <div class="slider-question">What feels natural to you?</div>
+        <input type="range" min="1" max="10" value="5" class="slider" id="slider1">
+        <div class="slider-labels">
+          <div class="slider-label-left">${dim.labelLow}</div>
+          <div class="slider-label-right">${dim.labelHigh}</div>
+        </div>
+      </div>
+      
+      <button class="btn" onclick="nextDimension1()">Next</button>
+    </div>
+  `;
+  
+  updateProgress1();
+}
+
+function nextDimension1() {
+  const score = parseInt(document.getElementById('slider1').value);
+  selfScores.push(score);
+  
+  currentDimension1++;
+  
+  if (currentDimension1 < 10) {
+    renderPhase1();
+    setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+  } else {
+    // Phase 1 complete -> Mini Game
+    document.getElementById('phase1').style.display = 'none';
+    showMiniGame();
+  }
+}
+
+function updateProgress1() {
+  const percent = (currentDimension1 / 10) * 100;
+  document.getElementById('progress1').style.width = percent + '%';
+  document.getElementById('progressText1').textContent = `Dimension ${currentDimension1 + 1} of 10`;
+}
+
+function showMiniGame() {
+  const game = document.getElementById('miniGame');
+  game.style.display = 'block';
+  
+  // Calculate top 3 matching countries based on selfScores
+  const matches = calculateMatches();
+  const top3 = matches.slice(0, 3);
+  
+  // Show 10 random countries for selection
+  const allCountries = Object.keys(countries);
+  const gameCountries = allCountries.sort(() => Math.random() - 0.5).slice(0, 10);
+  
+  game.innerHTML = `
+    <h2 class="game-title">🎯 Culture Quiz!</h2>
+    <p class="game-intro">Based on your profile, we predict you'd feel at home in these 3 countries.<br>Can you guess which ones?</p>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px;font-style:italic;">Note: These matches are based on your self-assessment scores, not actual country data.</p>
+    <p class="game-instruction">Select 3 countries:</p>
+    <div class="flags-grid" id="flagsGrid"></div>
+    <button class="btn" onclick="revealMatches()" id="guessBtn" disabled>Reveal Matches</button>
+  `;
+  
+  const grid = document.getElementById('flagsGrid');
+  gameCountries.forEach(code => {
+    const country = countries[code];
+    const div = document.createElement('div');
+    div.className = 'flag-option';
+    div.innerHTML = `<div class="flag-emoji">${country.flag}</div><div class="flag-name">${country.name}</div>`;
+    div.onclick = () => toggleFlag(code, div);
+    div.dataset.code = code;
+    grid.appendChild(div);
+  });
+  
+  window.guessedCountries = [];
+  window.correctMatches = top3;
+  
+  setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+}
+
+function toggleFlag(code, element) {
+  const index = window.guessedCountries.indexOf(code);
+  if (index > -1) {
+    window.guessedCountries.splice(index, 1);
+    element.classList.remove('selected');
+  } else if (window.guessedCountries.length < 3) {
+    window.guessedCountries.push(code);
+    element.classList.add('selected');
+  }
+  
+  document.getElementById('guessBtn').disabled = window.guessedCountries.length !== 3;
+}
+
+function calculateMatches() {
+  // Calculate similarity based on selfScores
+  // Countries with "typical" profiles (rough estimates for demo)
+  // Array indices match dimensions array order: 0=hierarchy, 1=communication, 2=task, 3=trust, 4=risk, 5=gender, 6=worklife, 7=individualism, 8=time, 9=conflict
+  const countryProfiles = {
+    denmark: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
+    sweden: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
+    norway: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
+    netherlands: [2, 2, 3, 3, 3, 2, 3, 3, 2, 3],
+    germany: [4, 3, 3, 4, 6, 3, 4, 4, 2, 3],
+    usa: [4, 3, 2, 4, 3, 4, 7, 2, 3, 3],
+    uk: [4, 3, 3, 4, 3, 3, 5, 3, 4, 3],
+    france: [5, 4, 5, 5, 6, 3, 3, 4, 4, 2],
+    spain: [5, 5, 6, 5, 5, 4, 4, 5, 6, 5],
+    italy: [5, 5, 6, 5, 6, 4, 4, 5, 6, 5],
+    japan: [7, 7, 7, 6, 7, 5, 7, 7, 2, 8],
+    china: [8, 7, 7, 6, 6, 6, 7, 7, 5, 7],
+    india: [7, 6, 7, 6, 6, 6, 6, 6, 6, 6],
+    brazil: [6, 5, 7, 6, 5, 5, 5, 6, 7, 5],
+    australia: [3, 3, 3, 3, 3, 2, 4, 3, 4, 3],
+    canada: [3, 3, 3, 3, 3, 2, 4, 3, 3, 3]
+  };
+  
+  const allCountries = Object.keys(countries).filter(c => c !== hostCountry);
+  
+  return allCountries.map(country => {
+    const profile = countryProfiles[country];
+    if (!profile) {
+      return {country, matchScore: 5, explanation: 'Profile data not available', totalGap: 999};
+    }
+    
+    // Calculate gap for each dimension
+    const gaps = selfScores.map((score, i) => Math.abs(score - profile[i]));
+    const totalGap = gaps.reduce((a,b) => a+b, 0);
+    const avgGap = totalGap / 10;
+    const matchScore = Math.max(1, Math.min(10, Math.round(10 - avgGap)));
+    
+    // Find strongest alignments (gap <= 2)
+    const strongDims = dimensions
+      .map((dim, i) => ({name: dim.title.split(' ')[0], gap: gaps[i]}))
+      .filter(d => d.gap <= 2)
+      .slice(0, 3)
+      .map(d => d.name);
+    
+    const explanation = strongDims.length > 0 
+      ? `Strong fit: ${strongDims.join(', ')}`
+      : 'Mixed alignment across dimensions';
+    
+    return {country, matchScore, explanation, totalGap};
+  }).sort((a, b) => a.totalGap - b.totalGap);
+}
+
+function revealMatches() {
+  const matches = window.correctMatches;
+  const guessed = window.guessedCountries;
+  
+  let html = '<h2 class="game-title">Your Matches</h2>';
+  html += '<div style="text-align:left;max-width:600px;margin:0 auto 32px;">';
+  
+  matches.forEach(match => {
+    const code = match.country;
+    const correct = guessed.includes(code);
+    html += `<div style="padding:20px;margin-bottom:16px;background:white;border-left:3px solid ${correct ? 'var(--blue-mid)' : 'var(--gold)'};border-radius:2px;box-shadow:0 2px 4px rgba(0,0,0,0.04);">
+      <div style="font-weight:600;margin-bottom:8px;font-size:15px;">${correct ? '✓' : '○'} ${countries[code].name} ${countries[code].flag}</div>
+      <div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px;">Match score: ${match.matchScore}/10</div>
+      <div style="font-size:12px;color:var(--ink-soft);">${match.explanation}</div>
+    </div>`;
+  });
+  
+  html += '</div>';
+  html += '<div style="font-size:14px;color:var(--ink-soft);margin-bottom:8px;">You guessed: ';
+  html += guessed.map(c => countries[c].name).join(', ');
+  html += '</div>';
+  html += '<div style="font-size:12px;color:var(--ink-soft);font-style:italic;margin-bottom:24px;">Matches based on your self-assessed preferences across 10 dimensions</div>';
+  html += '<button class="btn" onclick="startPhase2()">Continue to Phase 2</button>';
+  
+  document.getElementById('miniGame').innerHTML = html;
+  setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+}
+
+let currentDimension2 = 0;
+
+function startPhase2() {
+  document.getElementById('miniGame').style.display = 'none';
+  document.getElementById('phase2').style.display = 'block';
+  renderPhase2();
+  setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+}
+
+function renderPhase2() {
+  const container = document.getElementById('dimensionsContainer2');
+  const dim = dimensions[currentDimension2];
+  const countryName = countries[hostCountry].name;
+  
+  container.innerHTML = `
+    <div class="dimension-card">
+      <div class="dimension-number">Dimension ${currentDimension2 + 1} of 10</div>
+      <h2 class="dimension-title">${dim.title}</h2>
+      <p class="dimension-description">${dim.description}</p>
+      
+      <div class="scenario-box">
+        <div class="scenario-label">Same Scenario in ${countryName}</div>
+        <div class="scenario-text">"${dim.scenario}"</div>
+      </div>
+      
+      <div class="slider-container">
+        <div class="slider-question">How does ${countryName} typically handle this?</div>
+        <input type="range" min="1" max="10" value="5" class="slider" id="slider2">
+        <div class="slider-labels">
+          <div class="slider-label-left">${dim.labelLow}</div>
+          <div class="slider-label-right">${dim.labelHigh}</div>
+        </div>
+      </div>
+      
+      <button class="btn" onclick="nextDimension2()">Next</button>
+    </div>
+  `;
+  
+  updateProgress2();
+}
+
+function nextDimension2() {
+  const score = parseInt(document.getElementById('slider2').value);
+  hostScores.push(score);
+  
+  currentDimension2++;
+  
+  if (currentDimension2 < 10) {
+    renderPhase2();
+    setTimeout(() => window.scrollTo({top: 0, behavior: 'smooth'}), 50);
+  } else {
+    // Phase 2 complete -> Results
+    document.getElementById('phase2').style.display = 'none';
+    showResults();
+  }
+}
+
+function updateProgress2() {
+  const percent = (currentDimension2 / 10) * 100;
+  document.getElementById('progress2').style.width = percent + '%';
+  document.getElementById('progressText2').textContent = `Dimension ${currentDimension2 + 1} of 10`;
+}
+
+function showResults() {
+  const archetype = calculateArchetype();
+  const gaps = calculateGaps();
+  const fitScore = calculateFitScore();
+  
+  let html = '';
+  
+  // Archetype Card
+  html += `
+    <div class="archetype-card">
+      <div class="archetype-name">${archetype.name}</div>
+      <div class="archetype-description">${archetype.description}</div>
+      <div class="archetype-matches">
+        <strong>Best Fit Cultures:</strong> ${archetype.matches}<br>
+        <strong>Potential Challenges:</strong> ${archetype.challenges}
+      </div>
+    </div>
+  `;
+  
+  // Fit Score
+  html += `<div style="text-align:center;font-size:2rem;font-weight:600;color:var(--blue-dark);margin-bottom:40px;">
+    Your ${countries[hostCountry].name} Fit Score: ${fitScore}%
+  </div>`;
+  
+  // Radar Chart
+  html += `
+    <div class="radar-container">
+      <div class="radar-title">Your Cultural Profile</div>
+      <canvas id="radarChart" width="500" height="500"></canvas>
+    </div>
+  `;
+  
+  // Top 3 Gaps
+  html += `
+    <div class="gaps-section">
+      <div class="section-label">
+        <div class="section-label-line"></div>
+        <span>Your three largest cultural gaps</span>
+      </div>
+  `;
+  
+  gaps.slice(0, 3).forEach(gap => {
+    html += `
+      <div class="gap-card">
+        <div class="gap-title">${gap.dimension}</div>
+        <div class="gap-scores">You: ${gap.self}/10 · ${countries[hostCountry].name}: ${gap.host}/10</div>
+        <div class="gap-difference">Gap: ${gap.difference} points</div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  // Tool Context
+  html += `
+    <div class="tool-context">
+      <p><strong>About This Assessment:</strong></p>
+      <p>This tool reflects YOUR perception of cultural fit at a specific point in time — not objective country data.</p>
+      
+      <p><strong>Framework & Inspiration:</strong></p>
+      <p>The 10 dimensions draw on established cross-cultural research:</p>
+      <ul>
+        <li>Erin Meyer - "The Culture Map" (2014)</li>
+        <li>Geert Hofstede - Cultural Dimensions Theory</li>
+        <li>GLOBE Study - Global Leadership research</li>
+        <li>World Values Survey - sociological research</li>
+      </ul>
+      
+      <p>We've adapted these frameworks to focus on what matters most for expats navigating daily life.</p>
+      
+      <p style="margin-top:16px;">Want to explore what these results mean for you? <a href="index.html#contact" style="color:var(--blue-mid);text-decoration:underline;">Book a free JUMP conversation.</a></p>
+    </div>
+  `;
+  
+  html += '<button class="btn" onclick="window.print()">Save as PDF</button>';
+  
+  document.getElementById('results').innerHTML = html;
+  document.getElementById('results').style.display = 'block';
+  
+  setTimeout(() => {
+    drawRadarChart();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, 100);
+}
+
+function calculateArchetype() {
+  // Simplified archetype logic based on key dimensions
+  const avg = arr => arr.reduce((a,b) => a+b, 0) / arr.length;
+  
+  const hierarchyScore = selfScores[0];
+  const communicationScore = selfScores[1];
+  const taskScore = selfScores[2];
+  const riskScore = selfScores[4];
+  const worklifeScore = selfScores[6];
+  const individualismScore = selfScores[7];
+  
+  // Egalitarian Pragmatist: Low hierarchy, direct, task-based, good work-life
+  if (hierarchyScore <= 4 && communicationScore <= 4 && taskScore <= 4 && worklifeScore <= 4) {
+    return {
+      name: 'The Egalitarian Pragmatist',
+      description: 'You thrive in flat hierarchies where everyone has a voice. You value direct communication and build trust through getting things done. Work-life balance matters to you, and you\'re comfortable with ambiguity.',
+      matches: 'Denmark, Sweden, Netherlands, New Zealand',
+      challenges: 'Hierarchical cultures (Asia, Middle East), Relationship-first environments (Latin America, Southern Europe)'
+    };
+  }
+  
+  // Hierarchical Harmonizer: High hierarchy, indirect, relationship-based, collective
+  if (hierarchyScore >= 7 && communicationScore >= 7 && taskScore >= 7 && individualismScore >= 7) {
+    return {
+      name: 'The Hierarchical Harmonizer',
+      description: 'You respect authority and value harmony in relationships. Building trust through personal connection matters to you, and you prefer indirect communication that preserves face.',
+      matches: 'Japan, Singapore, parts of Asia and Middle East',
+      challenges: 'Flat hierarchies (Scandinavia), Direct confrontation cultures (Netherlands, Israel)'
+    };
+  }
+  
+  // Entrepreneurial Risk-Taker
+  if (hierarchyScore <= 4 && riskScore <= 4 && individualismScore <= 4 && worklifeScore >= 7) {
+    return {
+      name: 'The Entrepreneurial Risk-Taker',
+      description: 'You\'re comfortable with ambiguity and don\'t need clear hierarchies. You take calculated risks, value individual achievement, and your work is central to your identity.',
+      matches: 'United States, United Kingdom, parts of Asia (Singapore, Hong Kong)',
+      challenges: 'Risk-averse cultures (Germany, France), Strong work-life separation (Scandinavia, France)'
+    };
+  }
+  
+  // Structured Planner
+  if (riskScore >= 7 && selfScores[8] <= 4 && communicationScore <= 5) {
+    return {
+      name: 'The Structured Planner',
+      description: 'You value clarity, planning, and punctuality. You prefer direct but polite communication, and you like to minimize uncertainty through good processes.',
+      matches: 'Germany, Switzerland, parts of Northern Europe',
+      challenges: 'Highly flexible time cultures (Latin America, parts of Asia), Ambiguity-tolerant environments (US startups)'
+    };
+  }
+  
+  // Relationship Builder
+  if (taskScore >= 7 && individualismScore >= 7 && selfScores[9] >= 7) {
+    return {
+      name: 'The Relationship Builder',
+      description: 'You prioritize personal connections and building trust through shared experiences. Harmony matters more than efficiency, and you avoid direct confrontation.',
+      matches: 'Latin America, parts of Southern Europe, Middle East',
+      challenges: 'Task-first cultures (US, Germany), Confrontational debate cultures (France, Israel)'
+    };
+  }
+  
+  // Default: Flexible Adapter
+  return {
+    name: 'The Flexible Adapter',
+    description: 'You don\'t have extreme preferences in any direction, which makes you adaptable across cultures. You can adjust your style based on context.',
+    matches: 'Most cultures - you\'re a cultural chameleon',
+    challenges: 'May lack strong cultural identity, can be exhausting to constantly adapt'
+  };
+}
+
+function calculateGaps() {
+  return dimensions.map((dim, i) => ({
+    dimension: dim.title,
+    self: selfScores[i],
+    host: hostScores[i],
+    difference: Math.abs(selfScores[i] - hostScores[i])
+  })).sort((a, b) => b.difference - a.difference);
+}
+
+function calculateFitScore() {
+  const totalGap = selfScores.reduce((sum, score, i) => sum + Math.abs(score - hostScores[i]), 0);
+  const maxPossibleGap = 10 * 9; // 10 dimensions × max 9 points difference
+  const fitPercent = 100 - (totalGap / maxPossibleGap * 100);
+  return Math.round(fitPercent);
+}
+
+function drawRadarChart() {
+  const canvas = document.getElementById('radarChart');
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const r = Math.min(cx, cy) - 80;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const data = dimensions.map((dim, i) => ({
+    name: dim.title,
+    self: selfScores[i],
+    host: hostScores[i]
+  }));
+  
+  const step = (Math.PI * 2) / data.length;
+  
+  // Grid circles
+  ctx.strokeStyle = 'rgba(15,25,35,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 5; i++) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, (r/5)*i, 0, 2*Math.PI);
+    ctx.stroke();
+  }
+  
+  // Axes
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(15,25,35,0.08)';
+    ctx.stroke();
+    
+    // Labels
+    const lr = r + 50;
+    const lx = cx + lr * Math.cos(angle);
+    const ly = cy + lr * Math.sin(angle);
+    ctx.fillStyle = 'rgba(15,25,35,0.55)';
+    ctx.font = '11px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Split long labels
+    const words = item.name.split(' ');
+    if (words.length > 2) {
+      ctx.fillText(words.slice(0,2).join(' '), lx, ly - 7);
+      ctx.fillText(words.slice(2).join(' '), lx, ly + 7);
+    } else {
+      ctx.fillText(item.name, lx, ly);
+    }
+  });
+  
+  // Host polygon (background)
+  ctx.beginPath();
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    const d = (item.host / 10) * r;
+    const x = cx + d * Math.cos(angle);
+    const y = cy + d * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(200,164,90,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#c8a45a';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // Self polygon (foreground)
+  ctx.beginPath();
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    const d = (item.self / 10) * r;
+    const x = cx + d * Math.cos(angle);
+    const y = cy + d * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(27,58,92,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#1b3a5c';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // Data points
+  data.forEach((item, i) => {
+    const angle = step * i - Math.PI/2;
+    
+    // Self
+    const dSelf = (item.self / 10) * r;
+    ctx.beginPath();
+    ctx.arc(cx + dSelf*Math.cos(angle), cy + dSelf*Math.sin(angle), 4, 0, 2*Math.PI);
+    ctx.fillStyle = '#1b3a5c';
+    ctx.fill();
+    
+    // Host
+    const dHost = (item.host / 10) * r;
+    ctx.beginPath();
+    ctx.arc(cx + dHost*Math.cos(angle), cy + dHost*Math.sin(angle), 4, 0, 2*Math.PI);
+    ctx.fillStyle = '#c8a45a';
+    ctx.fill();
+  });
+  
+  // Legend
+  ctx.font = '12px Outfit, sans-serif';
+  ctx.fillStyle = '#1b3a5c';
+  ctx.fillRect(cx - 80, cy + r + 60, 12, 12);
+  ctx.fillStyle = 'rgba(15,25,35,0.7)';
+  ctx.textAlign = 'left';
+  ctx.fillText('You', cx - 65, cy + r + 70);
+  
+  ctx.fillStyle = '#c8a45a';
+  ctx.fillRect(cx + 20, cy + r + 60, 12, 12);
+  ctx.fillStyle = 'rgba(15,25,35,0.7)';
+  ctx.fillText(countries[hostCountry].name, cx + 35, cy + r + 70);
+}
+</script>
+
+</body>
+</html>
