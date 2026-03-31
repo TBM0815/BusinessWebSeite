@@ -107,6 +107,47 @@ canvas{max-width:100%;height:auto;}
   .category-score{flex-wrap:wrap;gap:8px;}
   .category-bar-wrap{display:none;}
 }
+
+/* PRINT CSS */
+@media print {
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  
+  /* Hide UI elements and questionnaire */
+  nav,.no-print,.hero,#questionnaire{display:none!important;}
+  
+  body{background:white;padding:0;font-size:11pt;line-height:1.4;}
+  .main{max-width:900px;margin:0 auto;padding:20px;}
+  
+  /* PDF Header/Footer */
+  .pdf-header{display:block !important;text-align:center;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--blue-dark);}
+  .pdf-title{font-family:"Cormorant Garamond",serif;font-size:20pt;font-weight:600;color:var(--blue-dark);margin-bottom:5px;}
+  .pdf-subtitle{font-family:"Outfit",sans-serif;font-size:11pt;color:#666;}
+  .pdf-footer{display:block !important;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:10pt;color:#666;padding:10px;border-top:1px solid #ddd;}
+  
+  /* Show results */
+  #results{display:block !important;}
+  
+  /* Score card */
+  .score-card{page-break-inside:avoid;padding:40px;margin-bottom:28px;background:var(--blue-dark) !important;color:white !important;}
+  .total-score{font-size:5rem;color:white !important;}
+  .score-label{color:rgba(249,246,241,0.6) !important;}
+  .interpretation{color:white !important;font-size:1rem;}
+  
+  /* Section labels */
+  .section-label{margin-bottom:20px;margin-top:32px;}
+  .section-label span{font-size:9pt;}
+  
+  /* Category scores */
+  .category-scores{margin-bottom:32px;}
+  .category-score{page-break-inside:avoid;padding:14px 18px;margin-bottom:6px;border-left:3px solid var(--blue-mid) !important;background:white !important;}
+  .category-name{font-size:11pt;}
+  .category-value{font-size:1.3rem;}
+  
+  /* Radar chart */
+  .radar-container{page-break-inside:avoid;padding:32px;margin-bottom:24px;background:white !important;border:1px solid #ddd !important;}
+  .radar-title{font-size:9pt;margin-bottom:20px;}
+  canvas{max-width:100%;height:auto;}
+}
 </style>
 </head>
 <body>
@@ -459,6 +500,12 @@ canvas{max-width:100%;height:auto;}
 
   <!-- RESULTS -->
   <div id="results">
+    
+    <div class="pdf-header" style="display:none;">
+      <div class="pdf-title">Hamster Wheel Assessment</div>
+      <div class="pdf-subtitle">TeamworX · <span id="pdf-date"></span></div>
+    </div>
+
     <div class="score-card">
       <div class="total-score" id="totalScore">0.0</div>
       <div class="score-label">Overall score · out of 10</div>
@@ -477,9 +524,13 @@ canvas{max-width:100%;height:auto;}
       <canvas id="radarChart" width="440" height="440"></canvas>
     </div>
 
-    <button class="btn" onclick="downloadCSV()">Download results as CSV</button>
-    <button class="btn btn-secondary" onclick="restart()">Start again</button>
-    <p class="export-note">Want to explore what's holding you back? <a href="index.html#contact" style="color:var(--blue-mid);">Book a free JUMP conversation.</a></p>
+    <button class="btn no-print" onclick="printPDF()">Save as PDF</button>
+    <button class="btn btn-secondary no-print" onclick="restart()">Start again</button>
+    <p class="export-note no-print">Want to explore what's holding you back? <a href="index.html#contact" style="color:var(--blue-mid);">Book a free JUMP conversation.</a></p>
+    
+    <div class="pdf-footer" style="display:none;">
+      teamworx.dk
+    </div>
   </div>
 
 </div><!-- end main -->
@@ -624,17 +675,24 @@ function drawRadarChart(data) {
   });
 }
 
-function downloadCSV() {
-  const { total, averages } = window._results;
-  let csv = 'Category,Score\n';
-  averages.forEach(c => { csv += `${c.name},${c.score.toFixed(1)}\n`; });
-  csv += `\nOverall Score,${total.toFixed(1)}\n`;
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'hamster-wheel-assessment.csv';
-  a.click();
+function printPDF() {
+  // Set PDF date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
+  document.getElementById('pdf-date').textContent = dateStr;
+  
+  // Show PDF header and footer
+  document.querySelector('.pdf-header').style.display = 'block';
+  document.querySelector('.pdf-footer').style.display = 'block';
+  
+  // Trigger print dialog
+  window.print();
+  
+  // Hide PDF header and footer again after print dialog closes
+  setTimeout(() => {
+    document.querySelector('.pdf-header').style.display = 'none';
+    document.querySelector('.pdf-footer').style.display = 'none';
+  }, 1000);
 }
 
 function restart() {
