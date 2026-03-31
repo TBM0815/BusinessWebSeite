@@ -137,6 +137,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
 .resources-box a{color:var(--blue-mid);text-decoration:none;border-bottom:1px solid rgba(46,110,158,0.3);}
 .resources-box a:hover{border-color:var(--blue-mid);}
 
+/* TOOL CONTEXT */
+.tool-context{background:var(--blue-light);border-left:3px solid var(--blue-mid);padding:24px 28px;margin:40px 0;border-radius:2px;}
+.tool-context p{font-size:14px;line-height:1.7;color:var(--ink);margin-bottom:12px;}
+.tool-context p:last-child{margin-bottom:0;}
+.tool-context strong{font-weight:600;color:var(--blue-dark);}
+
 .cta-note{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:16px;padding:20px;}
 .cta-note a{color:var(--blue-mid);text-decoration:none;border-bottom:1px solid rgba(46,110,158,0.3);}
 
@@ -150,6 +156,51 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
   .score-card{padding:36px 24px;}
   .total-score{font-size:4rem;}
   .recommendations{padding:24px 20px;}
+}
+
+/* PRINT CSS */
+@media print {
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  
+  /* Hide UI elements and questionnaire */
+  nav,.no-print,.hero,#questionnaire,.warning-box{display:none!important;}
+  
+  body{background:white;padding:0;font-size:11pt;line-height:1.4;}
+  .main{max-width:900px;margin:0 auto;padding:20px;}
+  
+  /* PDF Header/Footer */
+  .pdf-header{display:block !important;text-align:center;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--blue-dark);}
+  .pdf-title{font-family:"Cormorant Garamond",serif;font-size:20pt;font-weight:600;color:var(--blue-dark);margin-bottom:5px;}
+  .pdf-subtitle{font-family:"Outfit",sans-serif;font-size:11pt;color:#666;}
+  .pdf-footer{display:block !important;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:10pt;color:#666;padding:10px;border-top:1px solid #ddd;}
+  
+  /* Show results */
+  #results{display:block !important;}
+  
+  /* Score card - preserve risk colors */
+  .score-card{page-break-inside:avoid;padding:40px;margin-bottom:28px;}
+  .score-card.risk-low{background:var(--risk-low) !important;color:white !important;}
+  .score-card.risk-medium{background:var(--risk-medium) !important;color:white !important;}
+  .score-card.risk-high{background:var(--risk-high) !important;color:white !important;}
+  .score-card.risk-critical{background:var(--risk-critical) !important;color:white !important;}
+  .total-score{font-size:5rem;color:white !important;}
+  .score-label{color:rgba(255,255,255,0.6) !important;}
+  .risk-level{color:white !important;font-size:10pt;}
+  .interpretation{color:rgba(255,255,255,0.9) !important;font-size:1rem;}
+  
+  /* Section labels */
+  .section-label{margin-bottom:20px;margin-top:32px;}
+  .section-label span{font-size:9pt;}
+  
+  /* Breakdown */
+  .breakdown{grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:32px;}
+  .breakdown-item{page-break-inside:avoid;padding:18px;background:white !important;border:1px solid #ddd !important;}
+  .breakdown-title{font-size:10pt;}
+  .breakdown-score{font-size:2.2rem;color:var(--blue-dark);}
+  
+  /* Tool context */
+  .tool-context{page-break-inside:avoid;padding:20px 24px;margin-bottom:32px;background:var(--blue-light) !important;border-left:3px solid var(--blue-mid) !important;}
+  .tool-context p{font-size:10pt;line-height:1.6;margin-bottom:10px;}
 }
 </style>
 </head>
@@ -426,9 +477,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
   <!-- RESULTS -->
   <div id="results">
 
+    <div class="pdf-header" style="display:none;">
+      <div class="pdf-title">Burnout Risk Check</div>
+      <div class="pdf-subtitle">TeamworX · <span id="pdf-date"></span></div>
+    </div>
+
     <div class="score-card" id="scoreCard">
       <div class="total-score" id="totalScore">0</div>
-      <div class="score-label">Overall burnout score · 0-100 scale</div>
+      <div class="score-label">Burnout score</div>
       <div class="risk-level" id="riskLevel"></div>
       <div class="interpretation" id="interpretation"></div>
     </div>
@@ -442,25 +498,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
       <div class="breakdown-item">
         <div class="breakdown-title">Personal exhaustion</div>
         <div class="breakdown-score" id="personalScore">0</div>
-        <div class="breakdown-max">0-100 scale</div>
       </div>
       <div class="breakdown-item">
         <div class="breakdown-title">Work-related exhaustion</div>
         <div class="breakdown-score" id="workScore">0</div>
-        <div class="breakdown-max">0-100 scale</div>
       </div>
       <div class="breakdown-item">
         <div class="breakdown-title">People-related exhaustion</div>
         <div class="breakdown-score" id="peopleScore">0</div>
-        <div class="breakdown-max">0-100 scale</div>
       </div>
     </div>
 
-    <div class="recommendations" id="recommendations"></div>
+    <div class="tool-context">
+      <p><strong>About this assessment:</strong> This tool is based on the Copenhagen Burnout Inventory, a validated screening instrument. However, only a medical professional can diagnose burnout. These results reflect your self-assessment at a single point in time — they\'re a signal, not a verdict.</p>
+      <p>If these numbers feel true, take them seriously. <a href="index.html#contact" style="color:var(--blue-mid);text-decoration:underline;">Book a free JUMP conversation</a> to explore what\'s behind them.</p>
+    </div>
 
-    <button class="btn" onclick="downloadCSV()">Download results as CSV</button>
-    <button class="btn btn-secondary" onclick="restart()">Start again</button>
-    <p class="cta-note">These results are a starting point. <a href="teamworx_website.html#contact">Book a free JUMP conversation</a> to explore what they mean for you.</p>
+    <button class="btn no-print" onclick="printPDF()">Save as PDF</button>
+    <button class="btn btn-secondary no-print" onclick="restart()">Start again</button>
+
+    <div class="pdf-footer" style="display:none;">
+      teamworx.dk
+    </div>
 
   </div>
 
@@ -482,126 +541,71 @@ function updateProgress() {
 document.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', updateProgress));
 
 function calculateResults() {
-  // CBI uses 0-100 scale: Never=0, Seldom=25, Sometimes=50, Often=75, Always=100
-  const scale = [0, 25, 50, 75, 100];
-  
-  let personalSum = 0, workSum = 0, peopleSum = 0;
-  
-  // Personal burnout: 6 items (Q1-Q6)
-  for (let i = 1; i <= 6; i++) {
-    personalSum += scale[parseInt(document.querySelector(`input[name="q${i}"]:checked`).value)];
-  }
-  const personalScore = Math.round(personalSum / 6);
-  
-  // Work-related burnout: 7 items (Q7-Q13)
-  for (let i = 7; i <= 13; i++) {
-    workSum += scale[parseInt(document.querySelector(`input[name="q${i}"]:checked`).value)];
-  }
-  const workScore = Math.round(workSum / 7);
-  
-  // People-related burnout: 6 items (Q14-Q19)
-  for (let i = 14; i <= 19; i++) {
-    peopleSum += scale[parseInt(document.querySelector(`input[name="q${i}"]:checked`).value)];
-  }
-  const peopleScore = Math.round(peopleSum / 6);
-  
-  // Overall score is average of the three subscales
-  const totalScore = Math.round((personalScore + workScore + peopleScore) / 3);
+  let personal = 0, work = 0, people = 0;
+  for (let i = 1; i <= 6; i++) personal += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  for (let i = 7; i <= 13; i++) work += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  for (let i = 14; i <= 19; i++) people += parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+  const total = personal + work + people;
 
-  document.getElementById('totalScore').textContent = totalScore;
-  document.getElementById('personalScore').textContent = personalScore;
-  document.getElementById('workScore').textContent = workScore;
-  document.getElementById('peopleScore').textContent = peopleScore;
+  // Convert to percentages
+  const totalPercent = Math.round((total / 76) * 100);
+  const personalPercent = Math.round((personal / 24) * 100);
+  const workPercent = Math.round((work / 28) * 100);
+  const peoplePercent = Math.round((people / 24) * 100);
+
+  document.getElementById('totalScore').textContent = totalPercent + '%';
+  document.getElementById('personalScore').textContent = personalPercent + '%';
+  document.getElementById('workScore').textContent = workPercent + '%';
+  document.getElementById('peopleScore').textContent = peoplePercent + '%';
 
   const card = document.getElementById('scoreCard');
-  let riskClass, riskLabel, interp, recs;
+  let riskClass, riskLabel, interp;
 
-  // CBI thresholds: <50 = minimal/low, 50-74 = moderate, 75-99 = high, 100 = severe
-  if (totalScore < 50) {
+  if (totalPercent <= 25) {
     riskClass = 'risk-low';
     riskLabel = 'Low burnout risk';
-    interp = 'Your results show no significant signs of burnout. You appear to be managing your work situation well. Keep maintaining the habits that support you.';
-    recs = `<h3>Recommendations</h3>
-      <p>Even at low risk, prevention matters:</p>
-      <ul>
-        <li>Keep monitoring your work-life balance</li>
-        <li>Maintain social connections and hobbies</li>
-        <li>Prioritise sleep and regular movement</li>
-        <li>Build moments of self-reflection into your routine</li>
-      </ul>`;
-  } else if (totalScore < 75) {
+    interp = 'Your responses suggest you\'re managing demands reasonably well right now. That\'s worth acknowledging — though burnout can creep up slowly. Worth exploring: What keeps this balance in place? Are there early signals you might be ignoring? What would slip first if pressure increased? Consider: Are you maintaining habits that protect you — sleep, movement, social connection, moments to reflect?';
+  } else if (totalPercent <= 50) {
     riskClass = 'risk-medium';
-    riskLabel = 'Moderate burnout';
-    interp = 'Your results show moderate burnout. You are experiencing significant exhaustion and it is important to take action now before this escalates.';
-    recs = `<h3>Recommendations</h3>
-      <p>Now is the time to actively change course:</p>
-      <ul>
-        <li>Reduce sources of stress where possible</li>
-        <li>Set clear boundaries between work and personal life</li>
-        <li>Build conscious recovery time into your day</li>
-        <li>Talk to someone you trust about your workload</li>
-        <li>Consider professional support — coaching or counselling</li>
-      </ul>`;
-  } else {
+    riskLabel = 'Medium burnout risk';
+    interp = 'Your responses suggest real strain beginning to show. This is often the phase where people tell themselves \'it\'s temporary\' — but temporary can stretch longer than it should. Worth exploring: How long have you felt this way? What would need to change for this to feel sustainable? Are you waiting for someone else to fix this? Consider: What boundaries have you let slip? Where are you saying yes when you mean no? Who could you talk to about what\'s really going on?';
+  } else if (totalPercent <= 75) {
     riskClass = 'risk-high';
-    riskLabel = 'High burnout';
-    interp = 'Your results show high burnout. You are under severe strain and need to act immediately. Please take these signals very seriously.';
-    recs = `<h3>Immediate action needed</h3>
-      <p><strong>You are in a serious situation. Your health is at risk.</strong></p>
-      <ul>
-        <li><strong>Contact your doctor or mental health professional soon</strong></li>
-        <li>Talk to your employer about reducing your workload</li>
-        <li>Consider taking time off or sick leave</li>
-        <li>Activate your support network — family and friends</li>
-        <li>Drastically reduce professional commitments where possible</li>
-        <li>If you are having thoughts of self-harm: call a crisis line immediately</li>
-      </ul>
-      <div class="resources-box">
-        <h4>Emergency contacts</h4>
-        <p><strong>Livslinjen Denmark (24/7):</strong> <a href="tel:70201201">70 20 12 01</a></p>
-        <p><strong>International crisis support:</strong> <a href="https://www.befrienders.org" target="_blank">befrienders.org</a></p>
-        <p><strong>Emergency services:</strong> 112</p>
-      </div>`;
+    riskLabel = 'High burnout risk';
+    interp = 'Your responses point to significant exhaustion across multiple areas. This isn\'t something that resolves itself. Worth considering: How much longer can you continue at this pace? What are you afraid will happen if you slow down? Who needs to know how you\'re really feeling? This level of strain typically requires external support — a doctor, therapist, or coach who can help you see what you can\'t see yourself. Consider: What would taking time off actually look like? What\'s stopping you from asking for help?';
+  } else {
+    riskClass = 'risk-critical';
+    riskLabel = 'Critical burnout risk';
+    interp = 'Your responses suggest severe depletion. This tool can\'t diagnose, but these numbers — if they feel accurate — point to a state that requires immediate action. This is not about optimizing or toughing it out. If you\'re here, you likely need medical support, time away from work, and people around you who know what\'s happening. Crisis resources: Livslinjen Denmark (24/7): 70 20 12 01 · International: befrienders.org · Emergency: 112';
   }
 
   card.className = `score-card ${riskClass}`;
   document.getElementById('riskLevel').textContent = riskLabel;
   document.getElementById('interpretation').textContent = interp;
-  document.getElementById('recommendations').innerHTML = recs;
 
   document.getElementById('questionnaire').style.display = 'none';
   document.getElementById('results').style.display = 'block';
   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
 }
 
-function downloadCSV() {
-  const p = document.getElementById('personalScore').textContent;
-  const w = document.getElementById('workScore').textContent;
-  const pe = document.getElementById('peopleScore').textContent;
-  const t = document.getElementById('totalScore').textContent;
-  const risk = document.getElementById('riskLevel').textContent;
+function printPDF() {
+  // Set PDF date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
+  document.getElementById('pdf-date').textContent = dateStr;
   
-  let csv = 'COPENHAGEN BURNOUT INVENTORY RESULTS\n\n';
-  csv += 'Overall Assessment\n';
-  csv += 'Overall Burnout Score (0-100),' + t + '\n';
-  csv += 'Risk Level,"' + risk + '"\n\n';
+  // Show PDF header and footer
+  document.querySelector('.pdf-header').style.display = 'block';
+  document.querySelector('.pdf-footer').style.display = 'block';
   
-  csv += 'Subscale Scores (0-100 scale)\n';
-  csv += 'Area,Score\n';
-  csv += `Personal exhaustion,${p}\n`;
-  csv += `Work-related exhaustion,${w}\n`;
-  csv += `People-related exhaustion,${pe}\n\n`;
+  // Trigger print dialog
+  window.print();
   
-  csv += 'Interpretation Guide\n';
-  csv += 'Score Range,Burnout Level\n';
-  csv += '0-49,Minimal/Low burnout\n';
-  csv += '50-74,Moderate burnout\n';
-  csv += '75-100,High burnout\n';
-  
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'burnout-assessment-results.csv'; a.click();
+  // Hide PDF header and footer again after print dialog closes
+  setTimeout(() => {
+    document.querySelector('.pdf-header').style.display = 'none';
+    document.querySelector('.pdf-footer').style.display = 'none';
+  }, 1000);
 }
 
 function restart() {
