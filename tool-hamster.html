@@ -94,6 +94,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 60px;display:fl
 
 canvas{max-width:100%;height:auto;}
 
+/* LOWEST CATEGORIES */
+.lowest-categories{margin-bottom:40px;}
+.lowest-category{background:var(--cream2);border-left:4px solid var(--jump-orange);padding:18px 20px;margin-bottom:10px;border-radius:2px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.lowest-category-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:4px;}
+.lowest-category-score{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;color:var(--jump-orange);}
+
+/* TOOL CONTEXT */
+.tool-context{background:var(--blue-light);border-left:3px solid var(--blue-mid);padding:24px 28px;margin-bottom:48px;border-radius:2px;}
+.tool-context p{font-size:14px;line-height:1.7;color:var(--ink);margin-bottom:12px;}
+.tool-context p:last-child{margin-bottom:0;}
+.tool-context strong{font-weight:600;color:var(--blue-dark);}
+
 /* DOWNLOAD */
 .export-note{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:12px;}
 
@@ -137,16 +149,24 @@ canvas{max-width:100%;height:auto;}
   .section-label{margin-bottom:20px;margin-top:32px;}
   .section-label span{font-size:9pt;}
   
-  /* Category scores */
-  .category-scores{margin-bottom:32px;}
-  .category-score{page-break-inside:avoid;padding:14px 18px;margin-bottom:6px;border-left:3px solid var(--blue-mid) !important;background:white !important;}
-  .category-name{font-size:11pt;}
-  .category-value{font-size:1.3rem;}
+  /* Lowest categories */
+  .lowest-categories{margin-bottom:28px;}
+  .lowest-category{page-break-inside:avoid;padding:14px 18px;margin-bottom:8px;border-left:4px solid var(--jump-orange) !important;background:white !important;}
+  .lowest-category-name{font-size:11pt;}
+  .lowest-category-score{font-size:1.6rem;color:var(--jump-orange) !important;}
+  
+  /* Tool context */
+  .tool-context{page-break-inside:avoid;padding:20px 24px;margin-bottom:32px;background:var(--blue-light) !important;border-left:3px solid var(--blue-mid) !important;}
+  .tool-context p{font-size:10pt;line-height:1.6;margin-bottom:10px;}
+  
+  /* Hide individual category scores in print - radar chart shows everything */
+  .category-scores{display:none !important;}
+  .section-label:has(+ .category-scores){display:none !important;}
   
   /* Radar chart */
-  .radar-container{page-break-inside:avoid;padding:32px;margin-bottom:24px;background:white !important;border:1px solid #ddd !important;}
-  .radar-title{font-size:9pt;margin-bottom:20px;}
-  canvas{max-width:100%;height:auto;}
+  .radar-container{page-break-inside:avoid;padding:40px 20px;margin-bottom:24px;background:white !important;border:1px solid #ddd !important;}
+  .radar-title{font-size:10pt;margin-bottom:24px;}
+  canvas{max-width:100% !important;width:600px !important;height:600px !important;margin:0 auto;display:block;}
 }
 </style>
 </head>
@@ -494,6 +514,64 @@ canvas{max-width:100%;height:auto;}
       </div>
     </div>
 
+    <!-- 12. Monotony & Development -->
+    <div class="category">
+      <div class="category-title">Monotony &amp; Development</div>
+      <div class="question">
+        <div class="question-text">My work feels meaningful rather than repetitive.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="monotonie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I regularly learn something new and grow professionally.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="monotonie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">My days feel varied — not like every day is the same.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="monotonie">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. Authenticity & Body Awareness -->
+    <div class="category">
+      <div class="category-title">Authenticity &amp; Body Awareness</div>
+      <div class="question">
+        <div class="question-text">I listen to my body's signals (hunger, tiredness, pain) and act on them.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="authentizitaet">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I live in line with my natural rhythm rather than fighting it.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="authentizitaet">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-text">I can be myself at work — I don't have to suppress who I am.</div>
+        <div class="slider-container">
+          <input type="range" min="0" max="10" value="5" class="slider" data-category="authentizitaet">
+          <div class="slider-labels"><span>Not at all true</span><span>Completely true</span></div>
+          <div class="value-display">5</div>
+        </div>
+      </div>
+    </div>
+
     <button class="btn" onclick="calculateResults()">Show my results</button>
 
   </div><!-- end questionnaire -->
@@ -514,7 +592,19 @@ canvas{max-width:100%;height:auto;}
 
     <div class="section-label">
       <div class="section-label-line"></div>
-      <span>Results by category</span>
+      <span>Your three lowest-scoring areas</span>
+    </div>
+
+    <div id="lowestCategories" class="lowest-categories"></div>
+
+    <div class="tool-context">
+      <p><strong>About this assessment:</strong> This tool reflects your self-assessment at a single point in time. It can't know your full context, and it can't diagnose — only you can. But if these numbers feel true, they're worth taking seriously.</p>
+      <p>Want to explore what's behind them? <a href="index.html#contact" style="color:var(--blue-mid);text-decoration:underline;">Book a free JUMP conversation.</a></p>
+    </div>
+
+    <div class="section-label">
+      <div class="section-label-line"></div>
+      <span>All categories</span>
     </div>
 
     <div class="category-scores" id="categoryScores"></div>
@@ -553,7 +643,9 @@ const categoryMeta = {
   finanzen: 'Financial Security',
   karriere: 'Career Perspective',
   worklife: 'Work-Life Integration',
-  trust: 'Trust & Spirituality'
+  trust: 'Trust & Spirituality',
+  monotonie: 'Monotony & Development',
+  authentizitaet: 'Authenticity & Body Awareness'
 };
 
 function calculateResults() {
@@ -577,6 +669,17 @@ function calculateResults() {
   document.getElementById('interpretation').textContent = getInterpretation(total);
 
   const sorted = [...averages].sort((a,b) => a.score - b.score);
+  
+  // Show lowest 3 categories
+  const lowest3 = sorted.slice(0, 3);
+  document.getElementById('lowestCategories').innerHTML = lowest3.map(cat => `
+    <div class="lowest-category">
+      <div class="lowest-category-name">${cat.name}</div>
+      <div class="lowest-category-score">${cat.score.toFixed(1)} / 10</div>
+    </div>
+  `).join('');
+  
+  // Show all categories sorted
   document.getElementById('categoryScores').innerHTML = sorted.map(cat => `
     <div class="category-score">
       <div class="category-name">${cat.name}</div>
@@ -596,10 +699,19 @@ function calculateResults() {
 }
 
 function getInterpretation(score) {
-  if (score < 3) return 'You are deep in the hamster wheel. The signals are clear — this is a moment to stop and take stock. Things need to change.';
-  if (score < 5) return 'You are in the hamster wheel. Some areas are working, but the overall picture points to real strain. It may be time to make a move.';
-  if (score < 7) return 'You are in the grey zone — some things are working, many are not. There is meaningful room to improve your situation.';
-  return 'You are largely outside the hamster wheel. You live with a good degree of self-determination. Keep building on what works.';
+  const target1 = Math.round(score) + 2;
+  const target2 = Math.round(score) + 3;
+  
+  if (score < 3) {
+    return 'Your responses suggest significant strain across multiple areas. This pattern often points to systemic issues rather than isolated problems. Worth exploring: What would need to change for this to feel different? Which area, if improved, would create the biggest ripple effect?';
+  }
+  if (score < 5) {
+    return 'You\'re experiencing real tension in several areas. Some things are working, others aren\'t — and that mix can be exhausting in its own way. Worth exploring: Which of the lower-scoring areas bothers you most? What\'s preventing change? Are you tolerating something you shouldn\'t?';
+  }
+  if (score < 7) {
+    return `Mixed picture. Some areas score well, others don\'t. The question is whether this balance is sustainable or slowly wearing you down. Worth exploring: Is this 'good enough' or slowly draining? What would a ${target1} or ${target2} require? Are you avoiding a conversation you need to have?`;
+  }
+  return 'Your responses suggest a good degree of autonomy and balance. That\'s worth acknowledging — and protecting. Worth exploring: What made this possible? Which area could slip if you\'re not careful? Is there one dimension you\'re still compromising on?';
 }
 
 function drawRadarChart(data) {
