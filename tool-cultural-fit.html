@@ -435,7 +435,7 @@ function showMiniGame() {
   
   game.innerHTML = `
     <h2 class="game-title">🎯 Culture Quiz!</h2>
-    <p class="game-intro">Based on your profile, we predict you'd feel at home in these 3 countries.<br>Can you guess which ones?</p>
+    <p class="game-intro">Based on your profile, we predict you'd feel at home in 3 countries.<br>Can you guess which ones?</p>
     <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px;font-style:italic;">Note: These matches are based on your self-assessment scores, not actual country data.</p>
     <p class="game-instruction">Select 3 countries:</p>
     <div class="flags-grid" id="flagsGrid"></div>
@@ -480,19 +480,19 @@ function calculateMatches() {
     denmark: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
     sweden: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
     norway: [2, 3, 3, 2, 3, 1, 2, 4, 3, 4],
-    netherlands: [2, 2, 3, 3, 3, 2, 3, 3, 2, 3],
-    germany: [4, 3, 3, 4, 6, 3, 4, 4, 2, 3],
+    netherlands: [2, 2, 3, 3, 3, 2, 2, 3, 2, 3],
+    germany: [4, 3, 3, 4, 6, 3, 3, 4, 2, 3],
     usa: [4, 3, 2, 4, 3, 4, 7, 2, 3, 3],
-    uk: [4, 3, 3, 4, 3, 3, 5, 3, 4, 3],
-    france: [5, 4, 5, 5, 6, 3, 3, 4, 4, 2],
-    spain: [5, 5, 6, 5, 5, 4, 4, 5, 6, 5],
-    italy: [5, 5, 6, 5, 6, 4, 4, 5, 6, 5],
-    japan: [7, 7, 7, 6, 7, 5, 7, 7, 2, 8],
-    china: [8, 7, 7, 6, 6, 6, 7, 7, 5, 7],
-    india: [7, 6, 7, 6, 6, 6, 6, 6, 6, 6],
-    brazil: [6, 5, 7, 6, 5, 5, 5, 6, 7, 5],
-    australia: [3, 3, 3, 3, 3, 2, 4, 3, 4, 3],
-    canada: [3, 3, 3, 3, 3, 2, 4, 3, 3, 3]
+    uk: [4, 3, 3, 4, 3, 3, 5, 2, 4, 3],
+    canada: [4, 3, 3, 4, 3, 3, 4, 3, 3, 3],
+    australia: [4, 3, 3, 4, 3, 3, 5, 2, 4, 3],
+    france: [5, 4, 5, 6, 7, 3, 4, 4, 4, 2],
+    spain: [5, 5, 6, 6, 7, 4, 3, 5, 6, 5],
+    italy: [5, 5, 6, 6, 6, 4, 2, 4, 6, 5],
+    japan: [6, 7, 7, 5, 8, 5, 7, 6, 2, 8],
+    china: [8, 7, 7, 5, 4, 6, 8, 8, 5, 7],
+    india: [7, 6, 7, 5, 5, 6, 7, 6, 6, 6],
+    brazil: [6, 5, 7, 8, 6, 5, 6, 6, 7, 5]
   };
   
   const allCountries = Object.keys(countries).filter(c => c !== hostCountry);
