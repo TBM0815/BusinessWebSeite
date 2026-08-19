@@ -68,7 +68,7 @@ nav.scrolled{background:rgba(249,246,241,0.95);backdrop-filter:blur(16px);paddin
 .hero-brand-sub{font-family:"Cormorant Garamond",serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:300;font-style:italic;color:var(--ink-soft);margin-bottom:36px;opacity:0;animation:fadeUp 0.8s 0.5s ease forwards;}
 .hero-desc{font-size:1rem;line-height:1.85;color:var(--ink-soft);max-width:520px;margin-bottom:48px;opacity:0;animation:fadeUp 0.8s 0.65s ease forwards;}
 .hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s 0.8s ease forwards;}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--blue-dark);color:var(--cream);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:16px 32px;text-decoration:none;border-radius:2px;transition:all 0.2s;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--blue-dark);color:var(--cream);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:16px 32px;text-decoration:none;border-radius:2px;transition:all 0.2s;border:none;cursor:pointer;font-family:inherit;}
 .btn-primary:hover{background:var(--blue-mid);transform:translateY(-2px);}
 .btn-secondary{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:500;text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px;transition:all 0.2s;}
 .btn-secondary:hover{color:var(--blue-dark);border-color:var(--blue-dark);}
@@ -466,6 +466,9 @@ footer{padding:28px 60px;border-top:1px solid var(--border);display:flex;align-i
     </div>
     <h2 class="section-title reveal">Let's <em>talk</em></h2>
     <p class="contact-sub reveal">Whether coaching, team workshop or project consulting — a first conversation costs nothing and clarifies more than any website.</p>
+    <div class="reveal" style="margin-bottom:28px;">
+      <button data-cal-namespace="30min" data-cal-link="tomue27/30min" data-cal-config='{"layout":"month_view"}' class="btn-primary">Book a free call →</button>
+    </div>
     <div class="reveal">
       <a href="mailto:tobias@teamworx.dk" class="contact-email">tobias@teamworx.dk</a>
     </div>
@@ -501,5 +504,38 @@ function closeMenu(){
   document.body.style.overflow='';
 }
 </script>
+
+<!-- Cal.com element-click embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ["initNamespace", namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "30min", {origin: "https://cal.com"});
+  Cal.ns["30min"]("ui", {"styles": {"branding": {"brandColor": "#1b3a5c"}}, "hideEventTypeDetails": false, "layout": "month_view"});
+</script>
+<!-- Cal.com element-click embed code ends -->
 </body>
 </html>

@@ -61,7 +61,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 60px;display:fl
 .cta-title{font-family:"Cormorant Garamond",serif;font-size:2.5rem;font-weight:300;color:var(--cream);margin-bottom:16px;}
 .cta-title em{font-style:italic;color:var(--gold);}
 .cta-sub{font-size:1rem;color:rgba(249,246,241,0.65);margin-bottom:36px;}
-.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0f1923;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:16px 32px;text-decoration:none;border-radius:2px;transition:opacity 0.2s;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0f1923;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:16px 32px;text-decoration:none;border-radius:2px;transition:opacity 0.2s;border:none;cursor:pointer;font-family:inherit;}
 .cta-btn:hover{opacity:0.88;}
 
 footer{padding:28px 60px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
@@ -187,7 +187,7 @@ footer{padding:28px 60px;border-top:1px solid var(--border);display:flex;align-i
 <section class="cta-section">
   <h2 class="cta-title">Want to go <em>deeper?</em></h2>
   <p class="cta-sub">The tools are a starting point. JUMP coaching takes you through the full journey — with someone who's been through it themselves.</p>
-  <a href="index.html#contact" class="cta-btn">Book a free first call →</a>
+  <button data-cal-namespace="30min" data-cal-link="tomue27/30min" data-cal-config='{"layout":"month_view"}' class="cta-btn">Book a free first call →</button>
 </section>
 
 <footer>
@@ -200,5 +200,38 @@ const reveals = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(e => e.forEach(el => {if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:0.1});
 reveals.forEach(el => obs.observe(el));
 </script>
+
+<!-- Cal.com element-click embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ["initNamespace", namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "30min", {origin: "https://cal.com"});
+  Cal.ns["30min"]("ui", {"styles": {"branding": {"brandColor": "#c8a45a"}}, "hideEventTypeDetails": false, "layout": "month_view"});
+</script>
+<!-- Cal.com element-click embed code ends -->
 </body>
 </html>
